@@ -1,2 +1,37 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-#empty
+michael:
+  category_id: nil
+  question: "ece"
+  one: nil
+  two: nil
+  three: nil
+  four: nil
+  correct: nil
+  created_at: "2016-06-25 05:44:56"
+  updated_at: "2016-06-25 05:44:56"
+  no_attempt: nil
+  correct_attempt: nil
+  wrong_attempt: nil
+  ione_file_name: nil
+  ione_content_type: nil
+  ione_file_size: nil
+  ione_updated_at: nil
+  itwo_file_name: nil
+  itwo_content_type: nil
+  itwo_file_size: nil
+  itwo_updated_at: nil
+  ithree_file_name: nil
+  ithree_content_type: nil
+  ithree_file_size: nil
+  ithree_updated_at: nil
+  ifour_file_name: nil
+  ifour_content_type: nil
+  ifour_file_size: nil
+  ifour_updated_at: nil
+  diff: nil
+  a: nil
+  c: nil
+  iques_file_name: nil
+  iques_content_type: nil
+  iques_file_size: nil
+  iques_updated_at: nil

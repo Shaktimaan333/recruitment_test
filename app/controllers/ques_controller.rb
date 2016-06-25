@@ -1,5 +1,5 @@
 class QuesController < ApplicationController
-  before_action :logged_in_user, only: [:new, :index, :show]
+  before_action :logged_in_user, only: [:index, :show]
   #before_action :cant_go_back, only: [:show, :index]
   #before_action :cant_go_to_random_position, only: [:show]
   def new
