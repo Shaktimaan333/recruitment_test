@@ -1,0 +1,56 @@
+<%= provide(:title, "#{@ti} Test Question-#{@p}") %>
+<% if (current_user.count==1 || current_user.count%6==1) && current_user.under_test==1 %>
+  <div class = "alert alert-info">
+  "Before attempting this question please click on the button below for identity proof"
+  </div>
+  <%= link_to "Click photo", headshot_demo_index_path, target: "_blank", class: "btn btn-primary btn-md" %>
+<% end %>
+<h1>Question <%= @p %></h1>
+<p>This is a multiple choice question with one or more than one correct options</p>
+<h5><%= @present_ques.question %>?    Diff: <%= @present_ques.diff %>    Correct: <%= @present_ques.correct %>  Category: <%= @pres_cat.name %>     Topic: <%= @present_cat %></h5>
+<%= form_for(@sheet) do |f| %>
+
+
+<ul class="list-group">
+  <li class="list-group-item">
+    <div class="field", id="intest">
+    <%= f.label :one, class: "checkbox inline" do %>
+      <%= f.check_box :one %>
+      <span><%= @present_ques.one %></span>
+    <% end %>
+    </div>
+  </li>
+  <li class="list-group-item">
+    <div class="field", id="intest">
+    <%= f.label :two, class: "checkbox inline" do %>
+      <%= f.check_box :two %>
+      <span><%= @present_ques.two %></span>
+    <% end %>
+    </div>
+  </li>
+  <li class="list-group-item">
+    <div class="field", id="intest">
+    <%= f.label :three, class: "checkbox inline" do %>
+      <%= f.check_box :three %>
+      <span><%= @present_ques.three %></span>
+    <% end %>
+    </div>
+  </li>
+  <li class="list-group-item">
+    <div class="field", id="intest">
+    <%= f.label :four, class: "checkbox inline" do %>
+      <%= f.check_box :four %>
+      <span><%= @present_ques.four %></span>
+    <% end %>
+    </div>
+  </li>
+</ul>
+<div class="actions">
+<% if current_user.count==12 %>
+<%= f.submit "Finish", class:"btn btn-success btn-md" %>
+<% else %>
+<%= f.submit "Next ->", class: "button btn btn-success" %>
+<%= link_to "Finish", users_finish_path, class: "btn btn-success btn-md" %>
+<% end %>
+</div>
+<% end %>

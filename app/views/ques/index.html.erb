@@ -1,0 +1,15 @@
+<%= provide(:title, "Basic Info") %>
+<h1>Basic Info</h1>
+<h2>You have chosen <%= @exam.topic %> as your Topic for the test</h2>
+<p>The test contains questions solely related to the topic. The questions are multiple choice with one or more than one correct option.</p>
+<p>To start the test click on the button below</p>
+<%= form_for @misc do |f| %>
+<div class = "field">
+<%= f.label :terms, class: "checkbox-inline" do %>
+  <%= f.check_box :terms %>
+  <span>Accept the terms and conditions</span>
+<% end %>
+<h3> </h3>
+</div>
+<%= f.submit "Enter test", class: "button btn btn-success btn-md" %> 
+<% end %>

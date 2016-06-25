@@ -1,0 +1,37 @@
+<% provide(:title, @user.name) %>
+<div class="row">
+<aside class="col-md-4">
+<section class="user_info">
+<h1>
+<%= gravatar_for @user %>
+<%= @user.name %>
+<% if @user.admin==true %>
+<span class = "label label-danger">Admin</span>
+<% end %>
+</h1>
+</section>
+</aside>
+</div>
+<div class = "container fluid" %>
+<h2>Contact Information</h2>
+<h5>Email:</h5>
+<p><%= @user.email %></p>
+<h5>Mobile No:</h5>
+<p><%= @user.mobileno %></p>
+<h2>Proffesional Information</h2>
+<h5>Class X Percentage/CGPA:</h5>
+<p><%= @user.classten %></p>
+<h5>Class XII Percentage/CGPA:</h5>
+<p><%= @user.classtwelve %></p>
+<h5>Achievements:</h5>
+<p><%= @user.achievements %></p>
+<h5>Experience:</h5>
+<p><%= @user.experience %></p>
+<h5>Projects:</h5>
+<p><%= @user.projects %></p>
+</div>
+<%= link_to "Enter test", gettest_path, class: "btn btn-primary btn-md" %>
+<% if @user.admin==true %>
+<%= link_to "Refresh Difficulty", refresh_diff_path, class: "btn btn-primary btn-md" %>
+<%= link_to "Update count", update_count_path, class: "btn btn-primary btn-md" %>
+<% end %>

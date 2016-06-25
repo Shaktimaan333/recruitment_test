@@ -1,0 +1,9 @@
+<h1>Webcame Click</h1>
+<p>Please click on the Snap button below whenever ready</p>
+<%= headshot_default_config(Rails.application.config.session_options[:key], headshot_capture_path) %>
+<%= headshot_camera %>
+<br/>
+<h3></h3>
+<div>
+<%= headshot_snap_button('Snap') %>
+</div>
