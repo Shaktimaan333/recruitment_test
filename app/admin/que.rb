@@ -8,7 +8,7 @@ ActiveAdmin.register Que do
       f.input :two, label: "Option 2"
       f.input :three, label: "Option 3"
       f.input :four, label: "Option 4"
-      f.input :correct, label: "Correct Options"
+      f.input :correct, as: :select, collection: (1..4).map { |i| i }, label: "Correct Options"
       f.input :diff, as: :select, collection: (0..5).map { |i| i }, label: "Difficulty Level" 
       #f.select(:diff, options_for_select([[1,1], [2,2], [3,3], [4,4], [5,5]]))
       f.input :iques, required: false, label: "Image Question"
