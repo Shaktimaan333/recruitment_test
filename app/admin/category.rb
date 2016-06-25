@@ -1,5 +1,19 @@
 ActiveAdmin.register Category do
   permit_params :name
+  form multipart: true do |f|
+    f.inputs "Details" do
+      f.input :name
+    end
+    f.actions
+  end
+  index do
+    selectable_column
+    column :name
+    actions
+  end
+
+
+
   
 
 # See permitted parameters documentation:

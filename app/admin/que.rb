@@ -1,20 +1,21 @@
 ActiveAdmin.register Que do
   permit_params :question, :one, :two, :three, :four, :correct, :diff, :no_attempt, :correct_attempt, :wrong_attempt, :category_id, :diff, :ione, :itwo, :ithree, :ifour, :iques
   form multipart: true do |f|
-    f.inputs "Details" do
-      f.input :category_id
+    f.inputs "Details for New Question" do
+      f.input :category #, as: :select, collection: Category.select(:name).uniq
       f.input :question
-      f.input :one
-      f.input :two
-      f.input :three
-      f.input :four
+      f.input :one, label: "Option 1"
+      f.input :two, label: "Option 2"
+      f.input :three, label: "Option 3"
+      f.input :four, label: "Option 4"
       f.input :correct
-      f.input :diff
-      f.input :ione, required: false
-      f.input :itwo, required: false
-      f.input :ithree, required: false
-      f.input :ifour, required: false
-      f.input :iques, required: false
+      f.input :diff, as: :select, collection: (0..5).map { |i| i } 
+      #f.select(:diff, options_for_select([[1,1], [2,2], [3,3], [4,4], [5,5]]))
+      f.input :iques, required: false, label: "Image Question"
+      f.input :ione, required: false, label: "Image Option-1"
+      f.input :itwo, required: false, label: "Image Option-2"
+      f.input :ithree, required: false, label: "Image Option-3"
+      f.input :ifour, required: false, label: "Image Option-4"
       f.input :no_attempt, :input_html => { :value => 0 }, as: :hidden
       f.input :correct_attempt, :input_html => { :value => 0 }, as: :hidden
       f.input :wrong_attempt, :input_html => { :value => 0 }, as: :hidden
