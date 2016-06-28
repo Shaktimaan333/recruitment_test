@@ -1,5 +1,6 @@
 class StaticPagesController < ApplicationController
   #before_action :cant_go_back, only: [:home, :help, :about, :contact, :faq] 
+  #before_action :stay, only: [:home, :help, :about, :contact, :faq]
   def home
     @ipq = request.remote_ip.to_s
     @ipw = request.env['REMOTE_ADDR']
@@ -18,6 +19,22 @@ class StaticPagesController < ApplicationController
   def faq
   end
   private
+=begin  
+  def stay
+    if current_user.under_test==1
+      if current_user.exam_id>0
+        if current_user.count>0
+          redirect_to que_path(current_user.count)
+        else
+          current_user.update_attributes(redi: 3)
+          redirect_to ques_path
+        end
+      else
+        redirect_to gettest_path
+      end
+    end
+  end
+=end
   def cant_go_back
     if logged_in?
       if current_user.under_test==1

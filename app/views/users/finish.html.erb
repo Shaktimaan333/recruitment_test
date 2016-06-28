@@ -1,5 +1,6 @@
 <%= provide(:title, "Test Finished") %>
 <h1>Congratulations</h1>
-<h2>You have scored <%= @score.mark %> in <%= @exam.topic %> test</h2>
+<h2>You have a ability of <%= @ability %> in <%= @exam.topic %> test.</h2>
+<p>The ability calculated is on a scale of 0-5</p>
 <%= link_to "Home", root_path, class: "btn btn-primary btn-small" %>
 <%= link_to "Profile page", user_path(@user), class: "btn btn-primary btn-small" %>

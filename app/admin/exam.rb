@@ -1,16 +1,16 @@
 ActiveAdmin.register Exam do
-  permit_params :topic, :category_name, :no
+  permit_params :topic, :no,:category_name
   index do
     selectable_column
     column :id
     column :topic
-    column :category_name
+    #column :category_name
     actions
   end
   form multipart: true do |f|
     f.inputs "Details" do
       f.input :topic
-      f.input :category_name
+      #f.input :category_name
       f.input :no, :input_html => { :value => 0 }, as: :hidden
     end
     f.actions

@@ -1,5 +1,6 @@
 class QuesController < ApplicationController
   before_action :logged_in_user, only: [:index, :show]
+  before_action :stay, only: [:show]
   #before_action :cant_go_back, only: [:show, :index]
   #before_action :cant_go_to_random_position, only: [:show]
   def new
@@ -18,6 +19,25 @@ class QuesController < ApplicationController
      # end
   #  end
     @ti = Exam.find(current_user.exam_id).topic
+    if current_user.count==0
+      current_user.update_attributes(count: 1, under_test: 1, freq: current_user.freq + 1)
+      exam = Exam.find(current_user.exam_id)
+      i=0
+      a = Array.new
+      exam.categorys.each do |cat|
+        a[i] = cat.id
+        i = i + 1
+      end
+      no = rand(0..(a.size-1))
+      score = Score.create(user_id: current_user.id, mark: 0, attempt: current_user.freq, exam_id: current_user.exam_id, last: -1, category_id: 1)
+    else
+      score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
+      if current_user.redi==0
+        current_user.update_attributes(count: current_user.count + 1)
+      end
+    end
+
+=begin    
     if current_user.count==0
       current_user.update_attributes(count: 1, freq: current_user.freq+1, under_test: 1)
       pexam = Exam.find(current_user.exam_id)
@@ -55,25 +75,34 @@ class QuesController < ApplicationController
       end
       @queslines = Que.where(category_id: score.category_id)
     end
+=end    
     @p = current_user.count
     @present_cat = Exam.find(score.exam_id).topic
     @pres_cat = Category.find(score.category_id)
     if score.last==-1
-      if current_user.redi==-1
-        @present_ques = score.ques_id
-        @sheet = Sheet.create(attempt_id: sessions[:attempt_id], ques_id: @present_ques.id, updated: 0)
+      if current_user.redi==-1 || current_user.redi==2
+        @present_ques = Que.find(score.ques_id)
+        @sheet = Sheet.find_by(attempt_id: session[:attempt_id], ques_id: @present_ques.id, updated: 0)
+        @sheet ||= Sheet.create(attempt_id: session[:attempt_id], ques_id: @present_ques.id, updated: 0)
         score.update_attributes(ques_id: @present_ques.id)
+        @ability = session[:b]
+        @score = score
+        current_user.update_attributes(redi: 0)
       else
-        i=0
+        i=1
         c=0
-        while i!=Attempt.last.id do
+        if Attempt.last
+          d = Attempt.last.id
+        end
+        d ||= 0
+        while i<d do
           if Attempt.find(i).user_id==current_user.id && Attempt.find(i).exam_id==current_user.exam_id
             c=c+1
           end
           i=i+1
         end
-        sessions[:attempt_id] = Attempt.create(user_id: current_user.id, exam_id: current_user.exam_id, freq: c + 1).id
-        sessions[:b] = 0
+        session[:attempt_id] = Attempt.create(user_id: current_user.id, exam_id: current_user.exam_id, freq: c + 1).id
+        session[:b] = 3
         a = Array.new
         i=3
         while @queslines.blank? do
@@ -84,32 +113,56 @@ class QuesController < ApplicationController
           a[i] = quesline.id
           i = i + 1
         end
+        @ability = session[:b]
         no = rand(0..(a.size-1))
         que = Que.find_by(id: a[no])
         @present_ques = que
-        @sheet = Sheet.create(attempt_id: sessions[:attempt_id], ques_id: @present_ques.id, updated: 0)
+        @sheet = Sheet.create(attempt_id: session[:attempt_id], ques_id: @present_ques.id, updated: 0)
         score.update_attributes(ques_id: @present_ques.id)
+        @score = score
       end
     else
-      b = sessions[:b]
-      s = 0
-      t = 0
-      correct_count = 0
-      Sheets.where("attempt_id = ?", sessions[:attempt_id]).each do |a|
-        pm = (Math.exp(sessions[:b] - a.diff)/(1 + Math.exp(sessions[:b] - a.diff)))
-        s = s + pm
-        t = t + pm * (1 - pm)
-        if (a.correct?)
-          correct_count += 1
+      if current_user.redi==-1 || current_user.redi==2
+        @present_ques = Que.find(score.ques_id)
+        @sheet = Sheet.find_by(attempt_id: session[:attempt_id], ques_id: score.ques_id, updated: 0)
+        @sheet ||=Sheet.create(attempt_id: session[:attempt_id], ques_id: score.ques_id, updated: 0)
+        score.update_attributes(ques_id: @present_ques.id)
+        @ability = session[:b]
+        @score = score
+        current_user.update_attributes(redi: 0)
+      else
+        b = session[:b]
+        s = 0
+        t = 0
+        correct_count = 0
+        Sheet.where("attempt_id = ?", session[:attempt_id]).each do |a|
+          question = Que.find(a.ques_id)
+          pm = (Math.exp(b - question.diff)/(1 + Math.exp(b - question.diff)))
+          s = s + pm
+          t = t + pm * (1 - pm)
+          if (a.correct?)
+            correct_count += 1
+          end
         end
+        session[:b] = b + (correct_count - s)/t
+        min = Float::INFINITY
+        b = session[:b]
+        pre_id = 0
+        exam = Exam.find(Attempt.find(session[:attempt_id]).exam_id)
+        exam.ques.each do |que|
+          difference = (b - que.diff).abs
+          if difference<min && !Sheet.find_by(attempt_id: session[:attempt_id], ques_id: que.id, updated: 1)
+            min = difference
+            pre_id = que.id
+          end
+        end
+        @ability = session[:b]
+        @present_ques = Que.find(pre_id)
+        @sheet = Sheet.create(attempt_id: session[:attempt_id], ques_id: @present_ques.id, updated: 0)
+        score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
+        @score = score
       end
-      sessions[:b] = b + (correct_count - s)/t
-      min = 80
-      b = sessions[:b]
-      Que.all.each do |que|
-        difference = b - que.diff
-        if difference
-      end
+    end
 
 
 
@@ -380,6 +433,22 @@ class QuesController < ApplicationController
     redirect_to "http://localhost:3000/headshot_demo/index"
   end
   private
+  def stay
+    score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
+    if params[:id].to_i==current_user.count && Sheet.find_by(attempt_id: session[:attempt_id], ques_id: score.ques_id, updated: 0) && current_user.redi!=2
+      current_user.update_attributes(redi: 2)
+      redirect_to que_path(current_user.count)
+    else
+      if current_user.redi==1
+        current_user.update_attributes(redi: -1)
+      else
+        if (params[:id].to_i - 1)!=current_user.count && current_user.redi!=2
+          current_user.update_attributes(redi: 1)
+          redirect_to que_path(current_user.count)
+        end
+      end
+    end
+  end
   def cant_go_back
     if current_user.under_test==0 && current_user.redi==0
       flash[:danger] = "Sorry you cannot go directly"

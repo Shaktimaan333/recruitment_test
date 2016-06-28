@@ -49,7 +49,7 @@ class UsersController < ApplicationController
       @score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
       current_user.update_attributes(exam_id: 0, under_test: 0, count: 0, redi: 0)
       @user = current_user
-      @exam.update_attributes(category_name: @exam.category_name[0, @exam.category_name.length - 2])
+      @ability = session[:b]
     else
       current_user.update_attributes(exam_id: 0, under_test: 0, count: 0, redi: 0)
       flash[:danger] = "You have left the test"
