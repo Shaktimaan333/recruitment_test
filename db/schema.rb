@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160627132650) do
+ActiveRecord::Schema.define(version: 20160628120006) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -119,7 +119,7 @@ ActiveRecord::Schema.define(version: 20160627132650) do
     t.string   "ifour_content_type"
     t.integer  "ifour_file_size"
     t.datetime "ifour_updated_at"
-    t.integer  "diff"
+    t.decimal  "diff"
     t.decimal  "a"
     t.decimal  "c"
     t.string   "iques_file_name"
