@@ -87,7 +87,9 @@ class QuesController < ApplicationController
         score.update_attributes(ques_id: @present_ques.id)
         @ability = session[:b]
         @score = score
-        current_user.update_attributes(redi: 0)
+        if current_user.redi==2
+          current_user.update_attributes(redi: 0)
+        end
       else
         i=1
         c=0
@@ -129,7 +131,9 @@ class QuesController < ApplicationController
         score.update_attributes(ques_id: @present_ques.id)
         @ability = session[:b]
         @score = score
-        current_user.update_attributes(redi: 0)
+        if current_user.redi==2
+          current_user.update_attributes(redi: 0)
+        end
       else
         b = session[:b]
         s = 0
@@ -150,7 +154,7 @@ class QuesController < ApplicationController
         pre_id = 0
         exam = Exam.find(Attempt.find(session[:attempt_id]).exam_id)
         exam.ques.each do |que|
-          difference = (b - que.diff).abs
+          difference = ((b - que.diff).abs).to_f
           if difference<min && !Sheet.find_by(attempt_id: session[:attempt_id], ques_id: que.id, updated: 1)
             min = difference
             pre_id = que.id
@@ -435,14 +439,14 @@ class QuesController < ApplicationController
   private
   def stay
     score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
-    if params[:id].to_i==current_user.count && Sheet.find_by(attempt_id: session[:attempt_id], ques_id: score.ques_id, updated: 0) && current_user.redi!=2
+    if params[:id].to_i==current_user.count && Sheet.find_by(attempt_id: session[:attempt_id], ques_id: score.ques_id, updated: 0) && current_user.redi!=2 && current_user.redi!=-1
       current_user.update_attributes(redi: 2)
       redirect_to que_path(current_user.count)
     else
       if current_user.redi==1
         current_user.update_attributes(redi: -1)
       else
-        if (params[:id].to_i - 1)!=current_user.count && current_user.redi!=2
+        if (params[:id].to_i - 1)!=current_user.count && current_user.redi!=2 && current_user.redi!=-1
           current_user.update_attributes(redi: 1)
           redirect_to que_path(current_user.count)
         end
