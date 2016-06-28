@@ -53,16 +53,18 @@ class SheetsController < ApplicationController
       if a==0
         @score.update_attributes(mark: @score.mark+3, last: 1)
         @ques.update_attributes(correct_attempt: @ques.correct_attempt + 1)
+        @sheet.update_attributes(correct: true)
       else
         @score.update_attributes(mark: @score.mark-1, last: 0)
         @ques.update_attributes(wrong_attempt: @ques.wrong_attempt + 1)
+        @sheet.update_attributes(correct: false)
       end
     end
     @queslines = Que.where(exam_id: @score.exam_id)
     if current_user.count==12
       redirect_to users_finish_path
     else
-      redirect_to que_path(current_user.count+1)
+      redirect_to que_path(current_user.count + 1)
     end
   end
   private

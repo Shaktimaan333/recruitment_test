@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160623123920) do
+ActiveRecord::Schema.define(version: 20160627132650) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -46,11 +46,20 @@ ActiveRecord::Schema.define(version: 20160623123920) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
 
+  create_table "attempts", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "exam_id"
+    t.integer  "freq"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "mark"
+    t.integer  "exam_id"
   end
 
   create_table "exams", force: :cascade do |t|
@@ -134,9 +143,7 @@ ActiveRecord::Schema.define(version: 20160623123920) do
   end
 
   create_table "sheets", force: :cascade do |t|
-    t.integer  "user_id"
     t.integer  "ques_id"
-    t.integer  "attempt"
     t.boolean  "one"
     t.boolean  "two"
     t.boolean  "three"
@@ -144,6 +151,8 @@ ActiveRecord::Schema.define(version: 20160623123920) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "updated"
+    t.integer  "attempt_id"
+    t.boolean  "correct"
   end
 
   create_table "users", force: :cascade do |t|

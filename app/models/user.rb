@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   has_many :miscs
   has_many :sheets
   has_many :scores
+  has_many :attempts
 	attr_accessor :remember_token
 	before_save { self.email = email.downcase }
 	validates :name, presence: true, length: {maximum: 50}

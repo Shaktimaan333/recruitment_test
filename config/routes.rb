@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'attempts/new'
+
   get 'categorys/new'
 
   get 'headshot_demo/index'

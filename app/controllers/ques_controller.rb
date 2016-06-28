@@ -60,6 +60,112 @@ class QuesController < ApplicationController
     @pres_cat = Category.find(score.category_id)
     if score.last==-1
       if current_user.redi==-1
+        @present_ques = score.ques_id
+        @sheet = Sheet.create(attempt_id: sessions[:attempt_id], ques_id: @present_ques.id, updated: 0)
+        score.update_attributes(ques_id: @present_ques.id)
+      else
+        i=0
+        c=0
+        while i!=Attempt.last.id do
+          if Attempt.find(i).user_id==current_user.id && Attempt.find(i).exam_id==current_user.exam_id
+            c=c+1
+          end
+          i=i+1
+        end
+        sessions[:attempt_id] = Attempt.create(user_id: current_user.id, exam_id: current_user.exam_id, freq: c + 1).id
+        sessions[:b] = 0
+        a = Array.new
+        i=3
+        while @queslines.blank? do
+          @queslines = Que.where(category_id: score.category_id, diff: 3)
+        end
+        i=0
+        @queslines.each do |quesline|
+          a[i] = quesline.id
+          i = i + 1
+        end
+        no = rand(0..(a.size-1))
+        que = Que.find_by(id: a[no])
+        @present_ques = que
+        @sheet = Sheet.create(attempt_id: sessions[:attempt_id], ques_id: @present_ques.id, updated: 0)
+        score.update_attributes(ques_id: @present_ques.id)
+      end
+    else
+      b = sessions[:b]
+      s = 0
+      t = 0
+      correct_count = 0
+      Sheets.where("attempt_id = ?", sessions[:attempt_id]).each do |a|
+        pm = (Math.exp(sessions[:b] - a.diff)/(1 + Math.exp(sessions[:b] - a.diff)))
+        s = s + pm
+        t = t + pm * (1 - pm)
+        if (a.correct?)
+          correct_count += 1
+        end
+      end
+      sessions[:b] = b + (correct_count - s)/t
+      min = 80
+      b = sessions[:b]
+      Que.all.each do |que|
+        difference = b - que.diff
+        if difference
+      end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=begin    
+    if score.last==-1
+      if current_user.redi==-1
         @present_ques = Que.find(score.ques_id)
         @sheet = Sheet.create(user_id: current_user.id, attempt: current_user.freq, ques_id: @present_ques.id, updated: 0)
         score.update_attributes(ques_id: @present_ques.id)
@@ -106,8 +212,7 @@ class QuesController < ApplicationController
       @sheet = Sheet.create(user_id: current_user.id, attempt: current_user.freq, ques_id: @present_ques.id, updated: 0)
       score.update_attributes(ques_id: @present_ques.id)
     end
-
-
+=end
 
 
 

@@ -1,15 +1,17 @@
 class StaticPagesController < ApplicationController
   #before_action :cant_go_back, only: [:home, :help, :about, :contact, :faq] 
   def home
-    @ipq = request.remote_ip
+    @ipq = request.remote_ip.to_s
     @ipw = request.env['REMOTE_ADDR']
     @ipe = request.env["HTTP_X_FORWARDED_FOR"]
     @ipr = request.remote_addr
   end
   def help
+    @ipq = request.remote_ip
   end
   
   def about
+    @ipq = request.remote_ip
   end
   def contact
   end
