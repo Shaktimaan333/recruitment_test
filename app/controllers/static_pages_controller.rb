@@ -34,6 +34,7 @@ class StaticPagesController < ApplicationController
       end
     end
   end
+  
   def cant_go_back
     if logged_in?
       if current_user.under_test==1

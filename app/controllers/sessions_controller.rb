@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  before_action :stay, only: [:new, :create, :destroy]
   def new
   end
   def create
@@ -18,6 +19,22 @@ class SessionsController < ApplicationController
     else
       log_out if logged_in?
       redirect_to root_url
+    end
+  end
+  private
+  def stay
+    if current_user!=nil
+      if current_user.under_test==1
+        if current_user.exam_id>0
+          if current_user.count>0
+            redirect_to que_path(current_user.count)
+          else
+            redirect_to ques_path
+          end
+        else
+          redirect_to gettest_path
+        end
+      end
     end
   end
 end

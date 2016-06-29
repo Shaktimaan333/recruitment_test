@@ -4,8 +4,9 @@ class SheetsController < ApplicationController
   def new
   end
   def update
+    @attempt = Attempt.find(current_user.attempt_id)
     @score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
-    @sheet = Sheet.find_by(attempt_id: session[:attempt_id], ques_id: @score.ques_id)
+    @sheet = Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: @score.ques_id)
     @ques = Que.find_by(id: @score.ques_id)
     a=0
     if current_user.count==1
@@ -78,11 +79,11 @@ class SheetsController < ApplicationController
     end
     @queslines = Que.where(exam_id: @score.exam_id)
     if current_user.count==12
-      b = session[:b]
+      b = @attempt.ability
       s = 0
       t = 0
       correct_count = 0
-      Sheet.where("attempt_id = ?", session[:attempt_id]).each do |a|
+      Sheet.where("attempt_id = ?", current_user.attempt_id).each do |a|
         question = Que.find(a.ques_id)
         pm = (Math.exp(b - question.diff)/(1 + Math.exp(b - question.diff)))
         s = s + pm
@@ -91,7 +92,7 @@ class SheetsController < ApplicationController
           correct_count += 1
         end
       end
-      session[:b] = b + (correct_count - s)/t
+      @attempt.update_attributes(ability: b + (correct_count - s)/t)
       redirect_to users_finish_path
     else
       redirect_to que_path(current_user.count + 1)
