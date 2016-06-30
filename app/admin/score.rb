@@ -1,4 +1,5 @@
 ActiveAdmin.register Score do
+  permit_params :user_id, :attempt, :mark, :exam_id, :category_id, :last, :ques_id, :cat_count, :diff
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters

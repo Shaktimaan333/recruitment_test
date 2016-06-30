@@ -1,4 +1,5 @@
 ActiveAdmin.register Misc do
+  permit_params :terms, :user_id, :attempt
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters

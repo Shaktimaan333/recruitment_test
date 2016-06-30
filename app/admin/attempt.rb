@@ -1,4 +1,5 @@
 ActiveAdmin.register Attempt do
+  permit_params :user_id, :exam_id, :freq, :ability
 index do
   selectable_column
   column :user_id

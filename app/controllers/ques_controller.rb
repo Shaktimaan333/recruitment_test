@@ -100,7 +100,7 @@ class QuesController < ApplicationController
           d = Attempt.last.id
         end
         d ||= 0
-        while i<d do
+        while i<=d do
           if Attempt.find(i).user_id==current_user.id && Attempt.find(i).exam_id==current_user.exam_id
             c=c+1
           end
