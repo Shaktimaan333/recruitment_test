@@ -19,6 +19,7 @@ class UsersController < ApplicationController
   def create
   	@user = User.new(user_params)
   	if @user.save
+      @user.update_attributes(under_test: 0, redi: 0, exam_id: 0, count: 0, attempt_id: 0, freq: 0)
       log_in @user
       flash[:success] = "You have successfuly signed up for the test"
   		redirect_to @user#Handle a successful save
