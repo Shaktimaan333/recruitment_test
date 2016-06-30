@@ -1,6 +1,6 @@
 class StaticPagesController < ApplicationController
   #before_action :cant_go_back, only: [:home, :help, :about, :contact, :faq] 
-  before_action :stay, only: [:home, :help, :about, :contact, :faq]
+  #before_action :stay, only: [:home, :help, :about, :contact, :faq]
   def home
     @ipq = request.remote_ip.to_s
     @ipw = request.env['REMOTE_ADDR']

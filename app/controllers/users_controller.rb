@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :show, :gettest]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy, :refresh_diff, :update_count]
-  before_action :stay, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+  #before_action :stay, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   #before_action :not_allowed, only: [:finish]
   #before_action :cant_start_again, only: [:gettest]
   #before_action :cant_go_to_finish, only: [:finish]
