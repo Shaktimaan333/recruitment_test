@@ -1,8 +1,8 @@
 class QuesController < ApplicationController
   before_action :logged_in_user, only: [:index, :show]
-  #before_action :stay, only: [:show]
-  #before_action :not_allowed, only: [:show]
-  #before_action :test_started, only: [:index]
+  before_action :stay, only: [:show]
+  before_action :not_allowed, only: [:show]
+  before_action :test_started, only: [:index]
   #before_action :cant_go_back, only: [:show, :index]
   #before_action :cant_go_to_random_position, only: [:show]
   def new
@@ -159,25 +159,18 @@ class QuesController < ApplicationController
         min = Float::INFINITY
         b = @attempt.ability
         pre_id = 0
-        i = 0
-        a = Array.new
         exam = Exam.find(Attempt.find(current_user.attempt_id).exam_id)
         exam.ques.each do |que|
-          difference = ((b - que.diff).abs).to_f
-          if difference<min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
-            min = difference
+          if que.diff!=nil
+            difference = ((b - que.diff).abs).to_f
+            if difference<min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
+              min = difference
+              pre_id = que.id
+            end
           end
         end
-        exam.ques.each do |que|
-          difference = ((b - que.diff).abs).to_f
-          if difference==min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
-            a[i] = que.id
-            i = i + 1
-          end
-        end
-        no = rand(0..(a.size-1))
         @ability = @attempt.ability
-        @present_ques = Que.find(a[no])
+        @present_ques = Que.find(pre_id)
         @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
         score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
         @score = score
