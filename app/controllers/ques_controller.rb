@@ -161,10 +161,12 @@ class QuesController < ApplicationController
         pre_id = 0
         exam = Exam.find(Attempt.find(current_user.attempt_id).exam_id)
         exam.ques.each do |que|
-          difference = ((b - que.diff).abs).to_f
-          if difference<min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
-            min = difference
-            pre_id = que.id
+          if que.diff!=nil
+            difference = ((b - que.diff).abs).to_f
+            if difference<min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
+              min = difference
+              pre_id = que.id
+            end
           end
         end
         @ability = @attempt.ability

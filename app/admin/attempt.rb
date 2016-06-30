@@ -1,5 +1,11 @@
-ActiveAdmin.register User do
-permit_params :freq, :under_test, :count, :redi, :exam_id, :attempt_id, :name, :email, :projects, :achievements, :experience, :projects, :classten, :classtwelve
+ActiveAdmin.register Attempt do
+index do
+  selectable_column
+  column :user_id
+  column :exam_id
+  column :ability
+  column :freq
+end
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
