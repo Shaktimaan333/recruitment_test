@@ -31,7 +31,8 @@ class QuesController < ApplicationController
         i = i + 1
       end
       no = rand(0..(a.size-1))
-      score = Score.create(user_id: current_user.id, mark: 0, attempt: current_user.freq, exam_id: current_user.exam_id, last: -1, category_id: 1)
+      exam.categorys.first
+      score = Score.create(user_id: current_user.id, mark: 0, attempt: current_user.freq, exam_id: current_user.exam_id, last: -1, category_id: exam.categorys.first.id)
     else
       score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
       if current_user.redi==0
