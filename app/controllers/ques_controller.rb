@@ -113,8 +113,12 @@ class QuesController < ApplicationController
         @attempt.update_attributes(ability: 3)
         a = Array.new
         i=3
+        exam = Exam.find(current_user.exam_id)
         while @queslines.blank? do
-          @queslines = Que.where(category_id: score.category_id, diff: 3)
+          @queslines = exam.ques.where(diff: 3)
+          if @queslines.blank?
+            @queslines = exam.ques.where(diff: 2)
+          end
         end
         i=0
         @queslines.each do |quesline|
