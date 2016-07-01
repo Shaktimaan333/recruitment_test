@@ -1,10 +1,10 @@
 class QuesController < ApplicationController
   before_action :logged_in_user, only: [:index, :show]
-  before_action :stay, only: [:show]
-  before_action :not_allowed, only: [:show]
-  before_action :test_started, only: [:index]
-  #before_action :cant_go_back, only: [:show, :index]
-  #before_action :cant_go_to_random_position, only: [:show]
+  #before_action :stay, only: [:show]
+  #before_action :not_allowed, only: [:show]
+  #before_action :test_started, only: [:index]
+  ##before_action :cant_go_back, only: [:show, :index]
+  ##before_action :cant_go_to_random_position, only: [:show]
   def new
   end
   def show
@@ -101,10 +101,12 @@ class QuesController < ApplicationController
         end
         d ||= 0
         while i<=d do
-          if Attempt.find(i).user_id==current_user.id && Attempt.find(i).exam_id==current_user.exam_id
-            c=c+1
+          if !!Attempt.find_by(id: i)
+            if Attempt.find(i).user_id==current_user.id && Attempt.find(i).exam_id==current_user.exam_id
+              c=c+1
+            end
+            i=i+1
           end
-          i=i+1
         end
         current_user.update_attributes(attempt_id: Attempt.create(user_id: current_user.id, exam_id: current_user.exam_id, freq: c + 1).id)
         @attempt = Attempt.find(current_user.attempt_id)
