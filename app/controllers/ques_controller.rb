@@ -164,6 +164,8 @@ class QuesController < ApplicationController
         @attempt.update_attributes(ability: b + (correct_count - s)/t)
         if @attempt.ability >= -0.5
           rounded_part = @attempt.ability.round
+        elsif @attempt.ability >= 5.5
+          rounded_part = 5
         else
           rounded_part = 0
         end
