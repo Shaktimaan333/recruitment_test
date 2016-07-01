@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   get 'refresh_diff' => 'users#refresh_diff'
   get 'update_count' => 'users#update_count'
   get 'just_fake' => 'ques#just_fake'
+  get 'reset' => 'users#reset'
   resources :users
   resources :ques
   resources :sheets
