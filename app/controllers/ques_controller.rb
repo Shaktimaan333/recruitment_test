@@ -31,7 +31,6 @@ class QuesController < ApplicationController
         i = i + 1
       end
       no = rand(0..(a.size-1))
-      exam.categorys.first
       score = Score.create(user_id: current_user.id, mark: 0, attempt: current_user.freq, exam_id: current_user.exam_id, last: -1, category_id: exam.categorys.first.id)
     else
       score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
@@ -106,8 +105,8 @@ class QuesController < ApplicationController
             if Attempt.find(i).user_id==current_user.id && Attempt.find(i).exam_id==current_user.exam_id
               c=c+1
             end
-            i=i+1
           end
+          i=i+1
         end
         current_user.update_attributes(attempt_id: Attempt.create(user_id: current_user.id, exam_id: current_user.exam_id, freq: c + 1).id)
         @attempt = Attempt.find(current_user.attempt_id)
