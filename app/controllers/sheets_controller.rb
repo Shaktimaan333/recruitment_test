@@ -1,6 +1,6 @@
 class SheetsController < ApplicationController
   before_action :logged_in_user, only: [:update]
-  #before_action :cant_go_back, only: [:update]
+  before_action :cant_go_back, only: [:update]
   def new
   end
   def update

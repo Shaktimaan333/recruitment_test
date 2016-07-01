@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  #before_action :stay, only: [:new, :create, :destroy]
+  before_action :stay, only: [:new, :create, :destroy]
   def new
   end
   def create

@@ -1,8 +1,8 @@
 class QuesController < ApplicationController
   before_action :logged_in_user, only: [:index, :show]
-  #before_action :stay, only: [:show]
-  #before_action :not_allowed, only: [:show]
-  #before_action :test_started, only: [:index]
+  before_action :stay, only: [:show]
+  before_action :not_allowed, only: [:show]
+  before_action :test_started, only: [:index]
   ##before_action :cant_go_back, only: [:show, :index]
   ##before_action :cant_go_to_random_position, only: [:show]
   def new
