@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :show, :gettest]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :show, :gettest, :reset]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy, :refresh_diff, :update_count]
   before_action :stay, only: [:index, :show, :new, :create, :edit, :update, :destroy]
@@ -106,6 +106,14 @@ class UsersController < ApplicationController
     end
     flash[:success] = "Questions count was successfully updated"
     redirect_to user_path(current_user)
+  end
+  def reset
+    current_user.update_attributes(under_test: 0, exam_id: 0, redi: 0, count: 0)
+    Misc.where(user_id: current_user.id).each do |mi|
+      mi.destroy
+    end
+    flash[:success] = "You are good to attend the test again"
+    redirect_to root_path
   end
   private
   def user_params
