@@ -162,6 +162,63 @@ class QuesController < ApplicationController
         end
         @attempt = Attempt.find(current_user.attempt_id)
         @attempt.update_attributes(ability: b + (correct_count - s)/t)
+        if @attempt.ability >= -0.5
+          rounded_part = @attempt.ability.round
+        else
+          rounded_part = 0
+        end
+        @queslines = Que.where(diff: rounded_part)
+        b = Array.new
+        j = -1
+        @queslines.each do |quesline|
+          if !b.include?(quesline.category_id)
+            j = j + 1
+            b[j] = quesline.category_id
+          end
+        end
+        b.sort!
+        prev_cat_id = Que.find(score.ques_id).category_id
+        f=0
+        store = -1
+        count = 0
+        while f!=1 do
+          if b[count]>prev_cat_id
+            f = 1
+          elsif b[count]==prev_cat_id
+            if count!=j
+              count = count + 1
+            else
+              count=0
+            end
+            f = 1
+          else
+            count = count + 1
+          end
+        end
+        store = count
+        compare = b[count]
+        a = Array.new
+        i = 0
+        g=0
+        while a.blank? && g==0 do
+          @queslines.each do |quesline|
+            if quesline.category_id==compare && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: quesline.id, updated: 1)
+              a[i] = quesline.id
+              i = i + 1
+            end
+          end
+          if compare==j
+            count = 0
+          else
+            count = count + 1
+          end
+          compare = b[count]
+          if count==store
+            g=1
+          end
+        end
+        no = rand(0..(a.size-1))
+=begin
         min = Float::INFINITY
         b = @attempt.ability
         pre_id = 0
@@ -186,6 +243,8 @@ class QuesController < ApplicationController
           end
         end
         no = rand(0..(a.size-1))
+        @ability = @attempt.ability
+=end
         @ability = @attempt.ability
         @present_ques = Que.find(a[no])
         @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
