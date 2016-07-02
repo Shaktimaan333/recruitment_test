@@ -108,7 +108,7 @@ class QuesController < ApplicationController
           end
           i=i+1
         end
-        current_user.update_attributes(attempt_id: Attempt.create(user_id: current_user.id, exam_id: current_user.exam_id, freq: c + 1).id)
+        current_user.update_attributes(attempt_id: Attempt.create(user_id: current_user.id, exam_id: current_user.exam_id, freq: c + 1, start_time: Time.zone.now).id)
         @attempt = Attempt.find(current_user.attempt_id)
         @attempt.update_attributes(ability: 3)
         a = Array.new

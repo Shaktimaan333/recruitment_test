@@ -12,6 +12,7 @@
   <%= link_to "Click photo", headshot_demo_index_path, target: "_blank", class: "btn btn-primary btn-md" %>
   <% end %>
 <% end %>
+Test start time : <%= @attempt.start_time %>
 <h1>Question <%= @p %></h1>
 <p>This is a multiple choice question with one or more than one correct options</p>
 <h5><%= @present_ques.question %>?    Diff: <%= @present_ques.diff %>    Correct: <%= @present_ques.correct %>  Category: <%= @pres_cat.name %>     Topic: <%= @present_cat %> Ability- <%= @ability %>  Mark: <%= @score.mark %></h5>
