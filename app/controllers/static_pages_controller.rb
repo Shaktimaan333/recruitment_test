@@ -6,6 +6,8 @@ class StaticPagesController < ApplicationController
     @ipw = request.env['REMOTE_ADDR']
     @ipe = request.env["HTTP_X_FORWARDED_FOR"]
     @ipr = request.remote_addr
+    @present_ques = Que.find(501)
+    @sheet = Sheet.create
   end
   def help
     @ipq = request.remote_ip

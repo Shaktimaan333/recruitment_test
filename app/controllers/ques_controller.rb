@@ -162,7 +162,8 @@ class QuesController < ApplicationController
         end
         @attempt = Attempt.find(current_user.attempt_id)
         @attempt.update_attributes(ability: b + (correct_count - s)/t)
-        if @attempt.ability >= -0.5
+=begin        
+        if @attempt.ability >= -0.5 && @attempt.ability<5.5
           rounded_part = @attempt.ability.round
         elsif @attempt.ability >= 5.5
           rounded_part = 5
@@ -220,10 +221,12 @@ class QuesController < ApplicationController
           end
         end
         no = rand(0..(a.size-1))
-=begin
+=end
         min = Float::INFINITY
         b = @attempt.ability
         pre_id = 0
+        j = 0
+        bt = Array.new
         exam = Exam.find(Attempt.find(current_user.attempt_id).exam_id)
         exam.ques.each do |que|
           if que.diff!=nil
@@ -242,13 +245,72 @@ class QuesController < ApplicationController
               a[i] = que.id
               i = i + 1
             end
+            if difference<=1
+              bt[j] = que.id
+              j = j + 1
+            end
           end
         end
-        no = rand(0..(a.size-1))
+        prev_cat_id = Que.find(score.ques_id).category_id
+        exam = Exam.find(current_user.exam_id)
+        k = 0
+        t = Array.new
+        exam.categorys.each do |cat|
+          t[k] = cat.id
+          k = k + 1
+        end
+        t.sort!
+        f=0
+        count = 0
+        while f!=1 do
+          if t[count]>prev_cat_id
+            f=1
+          elsif t[count]==prev_cat_id
+            if count==k-1
+              count = 0
+            else
+              count = count + 1
+            end
+            f=1
+          else
+            count = count + 1
+          end
+        end
+        ar = Array.new
+        w=0
+        l=0
+        store = count
+        g=0
+        ag=0
+        while g==0 do
+          while w!=j do
+            if Que.find(bt[w]).category_id==t[count]
+              ar[l] = bt[w]
+              l = l + 1
+            end
+            w = w + 1
+          end
+          if count==k-1
+            count=0
+          else
+            count = count + 1
+          end
+          if count==store
+            g=1
+          end
+          if !ar.blank?
+            g=1
+            ag=1
+          end
+        end
+        if ag==1 || @attempt.ability<5.5
+          no = rand(0..(ar.size-1))
+          @present_ques = Que.find(ar[no])
+        else
+          no = rand(0..(a.size-1))
+          @present_ques = Que.find(a[no])
+        end
         @ability = @attempt.ability
-=end
-        @ability = @attempt.ability
-        @present_ques = Que.find(a[no])
         @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
         score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
         @score = score
