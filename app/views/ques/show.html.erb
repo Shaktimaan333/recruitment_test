@@ -28,17 +28,25 @@
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-          var futureDate  = new Date( <%= (@attempt.start_time + 22.minutes).to_f * 1000 %> )
+          var futureDate  = new Date( <%= (@attempt.start_time + 1.minutes).to_f * 1000 %> )
           $('[data-toggle="tooltip"]').tooltip();
           var $clock = $('#clock');
           $clock.countdown(futureDate)
             .on('update.countdown', function(event) {
             $(this).html(event.strftime('%M:%S'));
+          }).on('finish.countdown', function(event) {
+              window.location.href = '/users/finish';
           });
-			})
-      .on('finish.countdown', function(event) {
-        window.location.href = '/users/finish';
-      });
+
+          Offline.on('down', function () {
+                $clock.countdown('pause');
+            });
+
+          Offline.on('up', function () {
+                $clock.countdown('resume');
+            });
+			});
+
 		</script>
 <p>This is a multiple choice question with exactly one correct option</p>
 <h3><%= @present_ques.question %></h3>
