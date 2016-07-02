@@ -12,8 +12,15 @@
   <%= link_to "Click photo", headshot_demo_index_path, target: "_blank", class: "btn btn-primary btn-md" %>
   <% end %>
 <% end %>
-Test start time : <%= @attempt.start_time %>
-<div class="clock" style="margin:2em;"></div>
+<div class="row">
+  <div class="col-md-4">
+    <h1>Question <%= @p %></h1>
+  </div>
+  <div class="col-md-4 col-md-offset-4">
+    <div class="clock" style="margin:2em;"></div>
+  </div>
+</div>
+
 		
 		<script type="text/javascript">
 			var clock;
@@ -35,7 +42,7 @@ Test start time : <%= @attempt.start_time %>
 
 				// Instantiate a coutdown FlipClock
 				clock = $('.clock').FlipClock(diff, {
-					clockFace: 'DailyCounter',
+					clockFace: 'MinuteCounter',
           countdown: true,
           callbacks: {
             stop: function() {
@@ -45,9 +52,8 @@ Test start time : <%= @attempt.start_time %>
 				});
 			});
 		</script>
-<h1>Question <%= @p %></h1>
-<p>This is a multiple choice question with one or more than one correct options</p>
-<h5><%= @present_ques.question %>?    Diff: <%= @present_ques.diff %>    Correct: <%= @present_ques.correct %>  Category: <%= @pres_cat.name %>     Topic: <%= @present_cat %> Ability- <%= @ability %>  Mark: <%= @score.mark %></h5>
+<p>This is a multiple choice question with exactly one correct option</p>
+<h3><%= @present_ques.question %></h3>
 <% if !@present_ques.one.blank? %>
 <%= form_for(@sheet) do |f| %>
 

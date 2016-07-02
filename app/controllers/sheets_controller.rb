@@ -9,6 +9,11 @@ class SheetsController < ApplicationController
     @sheet = Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: @score.ques_id)
     @ques = Que.find_by(id: @score.ques_id)
     a=0
+    if Time.zone.now - @attempt.start_time > 25.minutes
+      @sheet.destroy
+      redirect_to users_finish_path
+      return
+    end
     if current_user.count==1
       if !File.exist?"public/headshots/#{current_user.id}_#{current_user.freq}_#{current_user.count}.jpg"
         current_user.update_attributes(redi: -1)
