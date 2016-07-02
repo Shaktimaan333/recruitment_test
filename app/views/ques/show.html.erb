@@ -17,40 +17,28 @@
     <h1>Question <%= @p %></h1>
   </div>
   <div class="col-md-4 col-md-offset-4">
-    <div class="clock" style="margin:2em;"></div>
+    <div class="panel panel-default" data-toggle="tooltip" data-placement="top">
+      <div class="panel-body">
+        <div class="lead" id="clock"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-		
+
 		<script type="text/javascript">
-			var clock;
-
 			$(document).ready(function() {
-
-				// Grab the current date
-				var currentDate = new Date();
-
-				// Set some date in the past. In this case, it's always been since Jan 1
-        var futureDate  = new Date( <%= (@attempt.start_time + 25.minutes).to_f * 1000 %> )
-
-				// Calculate the difference in seconds between the future and current date
-				var diff = futureDate.getTime() / 1000 - currentDate.getTime() / 1000;
-
-        if (diff < 0) {
-          diff = 0;
-        }
-
-				// Instantiate a coutdown FlipClock
-				clock = $('.clock').FlipClock(diff, {
-					clockFace: 'MinuteCounter',
-          countdown: true,
-          callbacks: {
-            stop: function() {
-              window.location.href = '/users/finish';
-            }
-          }
-				});
-			});
+          var futureDate  = new Date( <%= (@attempt.start_time + 22.minutes).to_f * 1000 %> )
+          $('[data-toggle="tooltip"]').tooltip();
+          var $clock = $('#clock');
+          $clock.countdown(futureDate)
+            .on('update.countdown', function(event) {
+            $(this).html(event.strftime('%M:%S'));
+          });
+			})
+      .on('finish.countdown', function(event) {
+        window.location.href = '/users/finish';
+      });
 		</script>
 <p>This is a multiple choice question with exactly one correct option</p>
 <h3><%= @present_ques.question %></h3>
