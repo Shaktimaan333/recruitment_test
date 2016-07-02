@@ -67,6 +67,8 @@ class SheetsController < ApplicationController
       end
     end
     if current_user.redi!=-1
+      @current_attempt = Attempt.find_by(id: current_user.attempt_id)
+      @current_attempt.update_attribute(:count, @current_attempt.count + 1)
       if a==0
         @score.update_attributes(mark: @score.mark + 3, last: 1)
         @ques.update_attributes(correct_attempt: @ques.correct_attempt + 1)
@@ -78,7 +80,7 @@ class SheetsController < ApplicationController
       end
     end
     @queslines = Que.where(exam_id: @score.exam_id)
-    if current_user.count==12
+    if current_user.count==40
       b = @attempt.ability
       s = 0
       t = 0

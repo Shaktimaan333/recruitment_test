@@ -12,6 +12,39 @@
   <%= link_to "Click photo", headshot_demo_index_path, target: "_blank", class: "btn btn-primary btn-md" %>
   <% end %>
 <% end %>
+Test start time : <%= @attempt.start_time %>
+<div class="clock" style="margin:2em;"></div>
+		
+		<script type="text/javascript">
+			var clock;
+
+			$(document).ready(function() {
+
+				// Grab the current date
+				var currentDate = new Date();
+
+				// Set some date in the past. In this case, it's always been since Jan 1
+        var futureDate  = new Date( <%= (@attempt.start_time + 25.minutes).to_f * 1000 %> )
+
+				// Calculate the difference in seconds between the future and current date
+				var diff = futureDate.getTime() / 1000 - currentDate.getTime() / 1000;
+
+        if (diff < 0) {
+          diff = 0;
+        }
+
+				// Instantiate a coutdown FlipClock
+				clock = $('.clock').FlipClock(diff, {
+					clockFace: 'DailyCounter',
+          countdown: true,
+          callbacks: {
+            stop: function() {
+              window.location.href = '/users/finish';
+            }
+          }
+				});
+			});
+		</script>
 <h1>Question <%= @p %></h1>
 <p>This is a multiple choice question with one or more than one correct options</p>
 <h5><%= @present_ques.question %>?    Diff: <%= @present_ques.diff %>    Correct: <%= @present_ques.correct %>  Category: <%= @pres_cat.name %>     Topic: <%= @present_cat %> Ability- <%= @ability %>  Mark: <%= @score.mark %></h5>
