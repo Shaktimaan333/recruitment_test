@@ -78,7 +78,7 @@ class SheetsController < ApplicationController
       end
     end
     @queslines = Que.where(exam_id: @score.exam_id)
-    if current_user.count==12
+    if current_user.count==40
       b = @attempt.ability
       s = 0
       t = 0
