@@ -31,7 +31,7 @@
           var futureDate  = new Date( <%= (@attempt.start_time + 25.minutes).to_f * 1000 %> );
           var savedTime = localStorage.getItem('currentTimerValue');
           var pathname = window.location.pathname;
-          if (savedTime != null && pathname != '/ques/1') {
+          if (savedTime != null) {
             var timeArray = savedTime.split(":");
             var min = timeArray[0];
             var sec = timeArray[1];
