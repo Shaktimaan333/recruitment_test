@@ -5,3 +5,10 @@
 <p>No. of questions attempted : <%= @attempt.count %> </p>
 <%= link_to "Home", root_path, class: "btn btn-primary btn-small" %>
 <%= link_to "Profile page", user_path(@user), class: "btn btn-primary btn-small" %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+      localStorage.removeItem('currentTimerValue');
+  });
+
+</script>

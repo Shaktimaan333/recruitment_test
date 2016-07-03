@@ -28,11 +28,19 @@
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-          var futureDate  = new Date( <%= (@attempt.start_time + 1.minutes).to_f * 1000 %> )
+          var futureDate  = new Date( <%= (@attempt.start_time + 25.minutes).to_f * 1000 %> );
+          var savedTime = localStorage.getItem('currentTimerValue');
+          var pathname = window.location.pathname;
+          if (savedTime != null && pathname != '/ques/1') {
+            var timeArray = savedTime.split(":");
+            var min = timeArray[0];
+            var sec = timeArray[1];
+            now = new Date().getTime();
+            futureDate = new Date((now + parseInt(min) * 60000 + parseInt(sec) * 1000));
+          }
           $('[data-toggle="tooltip"]').tooltip();
           var $clock = $('#clock');
-          $clock.countdown(futureDate)
-            .on('update.countdown', function(event) {
+          $clock.countdown(futureDate, function(event) {
             $(this).html(event.strftime('%M:%S'));
           }).on('finish.countdown', function(event) {
               window.location.href = '/users/finish';
@@ -45,6 +53,10 @@
           Offline.on('up', function () {
                 $clock.countdown('resume');
             });
+
+          setInterval(function() {
+            localStorage.setItem('currentTimerValue', $clock.html());
+          }, 1000);
 			});
 
 		</script>
