@@ -39,7 +39,7 @@ class QuesController < ApplicationController
       end
     end
 
-=begin    
+=begin
     if current_user.count==0
       current_user.update_attributes(count: 1, freq: current_user.freq+1, under_test: 1)
       pexam = Exam.find(current_user.exam_id)
@@ -77,7 +77,7 @@ class QuesController < ApplicationController
       end
       @queslines = Que.where(category_id: score.category_id)
     end
-=end    
+=end
     @p = current_user.count
     @present_cat = Exam.find(score.exam_id).topic
     @pres_cat = Category.find(score.category_id)
@@ -162,7 +162,7 @@ class QuesController < ApplicationController
         end
         @attempt = Attempt.find(current_user.attempt_id)
         @attempt.update_attributes(ability: b + (correct_count - s)/t)
-=begin        
+=begin
         if @attempt.ability >= -0.5 && @attempt.ability<5.5
           rounded_part = @attempt.ability.round
         elsif @attempt.ability >= 5.5
@@ -303,7 +303,7 @@ class QuesController < ApplicationController
             ag=1
           end
         end
-        if ag==1 || @attempt.ability<5.5
+        if ag==1 && @attempt.ability<5.5
           no = rand(0..(ar.size-1))
           @present_ques = Que.find(ar[no])
         else
@@ -369,7 +369,7 @@ class QuesController < ApplicationController
 
 
 
-=begin    
+=begin
     if score.last==-1
       if current_user.redi==-1
         @present_ques = Que.find(score.ques_id)
@@ -548,7 +548,7 @@ class QuesController < ApplicationController
               if quesline.diff==prev_ques.diff+inc_diff && !Sheet.find_by(user_id: current_user.id, attempt: current_user.freq, ques_id: quesline.id, updated: 1)
                 i=i+1
                 a[i] = quesline.id
-              end 
+              end
             end
             inc_diff = inc_diff + 1
           end
@@ -637,7 +637,7 @@ class QuesController < ApplicationController
       if a==current_user.count && Sheet.find_by(user_id: current_user.id, attempt: current_user.freq, ques_id: @score.ques_id, updated: 0)
         current_user.update_attributes(redi: 1)
       else
-        if a!=current_user.count+1 
+        if a!=current_user.count+1
           current_user.update_attributes(redi: 0, exam_id: 0, under_test: 0, count: 0)
           flash[:danger]="Your test has been cancelled as you were found cheating"
           redirect_to user_path(current_user)
