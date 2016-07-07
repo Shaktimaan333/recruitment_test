@@ -6,6 +6,8 @@ index do
   column :exam_id
   column :ability
   column :freq
+  column :start_time
+  actions
 end
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters

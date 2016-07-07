@@ -12,6 +12,15 @@ ActiveAdmin.register Sheet do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
+index do
+  selectable_column
+  column "Attempt", :attempt_id
+  column :answer
+  column :correct
+  column "Question", :ques_id
+  column :updated
+  actions
+end
 
 
 end
