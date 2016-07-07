@@ -18,15 +18,7 @@ class SheetsController < ApplicationController
         current_user.update_attributes(redi: 0)
       end
     end
-    if current_user.count%6==1
-      if !File.exist?"public/headshots/#{current_user.id}_#{current_user.freq}_#{current_user.count}.jpg"
-        current_user.update_attributes(redi: -1)
-        redirect_to que_path(current_user.count)
-        return
-      else
-        current_user.update_attributes(redi: 0)
-      end
-    end
+    
     if @sheet.update_attributes(sheet_params)
       @sheet.update_attributes(updated: 1)
     end

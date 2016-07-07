@@ -1,5 +1,5 @@
 <%= provide(:title, "#{@ti} Test Question-#{@p}") %>
-<% if (current_user.count==1 || current_user.count%6==1) && current_user.under_test==1 %>
+<% if (current_user.count==1) && current_user.under_test==1 %>
 <% if current_user.redi!=-1 %>
   <div class = "alert alert-info">
   "Before attempting this question please click on the button below for identity proof"
