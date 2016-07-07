@@ -30,6 +30,14 @@ class SheetsController < ApplicationController
     if @sheet.update_attributes(sheet_params)
       @sheet.update_attributes(updated: 1)
     end
+    integer_form = @ques.correct.to_i
+    integer_fo = @sheet.answer.to_i
+    if integer_form!=integer_fo
+      a=1
+    else
+      a=0
+    end
+=begin
     if @ques.correct.include?('1')
       if @sheet.one!=true
         a=1
@@ -66,6 +74,7 @@ class SheetsController < ApplicationController
         a=1
       end
     end
+=end
     if current_user.redi!=-1
       @current_attempt = Attempt.find_by(id: current_user.attempt_id)
       @current_attempt.update_attribute(:count, @current_attempt.count + 1)
@@ -102,7 +111,7 @@ class SheetsController < ApplicationController
   end
   private
   def sheet_params
-    params.require(:sheet).permit(:one, :two, :three, :four)
+    params.require(:sheet).permit(:one, :two, :three, :four, :answer)
   end
   private
   def logged_in_user

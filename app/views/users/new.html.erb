@@ -5,28 +5,28 @@
 <%= form_for(@user) do |f| %>
 <%= render 'shared/error_messages' %>
 <%= f.label :name %>
-<%= f.text_field :name, class: 'form_control' %>
+<%= f.text_field :name, class: 'form-control' %>
 <h2>Contact Information</h2>
 <%= f.label :email %>
-<%= f.email_field :email, class: 'form_control' %>
+<%= f.email_field :email, class: 'form-control' %>
 <%= f.label :mobileno, "Mobile No." %>
-<%= f.text_field :mobileno, class: 'form_control' %>
+<%= f.text_field :mobileno, class: 'form-control' %>
 <h2>Professional Information</h2>
 <%= f.label :classten, "Class X Percentage/CGPA" %>
-<%= f.text_field :classten, class: 'form_control' %>
+<%= f.text_field :classten, class: 'form-control' %>
 <%= f.label :classtwelve, "Class XII Percentage/CGPA" %>
-<%= f.text_field :classtwelve, class: 'form_control' %>
+<%= f.text_field :classtwelve, class: 'form-control' %>
 <%= f.label :achievements %>
-<%= f.text_field :achievements, class: 'form_control' %>
+<%= f.text_field :achievements, class: 'form-control' %>
 <%= f.label :experience %>
-<%= f.text_field :experience, class: 'form_control' %>
+<%= f.text_field :experience, class: 'form-control' %>
 <%= f.label :projects %>
-<%= f.text_field :projects, class: 'form_control' %>
+<%= f.text_field :projects, class: 'form-control' %>
 <h2>     </h2>
 <%= f.label :password %>
-<%= f.password_field :password, class: 'form_control' %>
+<%= f.password_field :password, class: 'form-control' %>
 <%= f.label :password_confirmation, "Confirmation" %>
-<%= f.password_field :password_confirmation, class: 'form_control' %>
+<%= f.password_field :password_confirmation, class: 'form-control' %>
 <%= f.submit "Create my account", class: "btn btn-primary" %>
 <% end %>
 </div>

@@ -157,7 +157,7 @@ margin: 0 0 30px 0;
 color: $state-danger-text;
 }
 }
-.checkbox {
+.radio {
   margin-top: -10px;
   margin-bottom: 10px;
   span {
@@ -192,4 +192,9 @@ border-bottom: 1px solid $gray-lighter;
   align: right;
   width: 300px;
   padding: 10px;
+  margin-left: 0px;
+}
+.finish {
+  width: 100px;
+  height: 100px;
 }

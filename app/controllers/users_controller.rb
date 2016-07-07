@@ -8,7 +8,9 @@ class UsersController < ApplicationController
   #before_action :cant_go_to_finish, only: [:finish]
   #before_action :cant_visit_other_pages, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   def index
-    @users = User.paginate(page: params[:page])
+    flash[:danger]="Not allowed"
+    redirect_to root_url
+    #@users = User.paginate(page: params[:page])
   end
   def show
   	@user = User.find(params[:id])

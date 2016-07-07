@@ -69,32 +69,32 @@
 <ul class="list-group">
   <li class="list-group-item">
     <div class="field", id="intest">
-    <%= f.label :one, class: "checkbox inline" do %>
-      <%= f.check_box :one %>
+    <%= f.label :answer, class: "radio inline" do %>
+      <%= f.radio_button(:answer, 1) %>
       <span><%= @present_ques.one %></span>
     <% end %>
     </div>
   </li>
   <li class="list-group-item">
     <div class="field", id="intest">
-    <%= f.label :two, class: "checkbox inline" do %>
-      <%= f.check_box :two %>
+    <%= f.label :answer, class: "radio inline" do %>
+      <%= f.radio_button(:answer, 2) %>
       <span><%= @present_ques.two %></span>
     <% end %>
     </div>
   </li>
   <li class="list-group-item">
     <div class="field", id="intest">
-    <%= f.label :three, class: "checkbox inline" do %>
-      <%= f.check_box :three %>
+    <%= f.label :answer, class: "radio inline" do %>
+      <%= f.radio_button(:answer, 3) %>
       <span><%= @present_ques.three %></span>
     <% end %>
     </div>
   </li>
   <li class="list-group-item">
     <div class="field", id="intest">
-    <%= f.label :four, class: "checkbox inline" do %>
-      <%= f.check_box :four %>
+    <%= f.label :answer, class: "radio inline" do %>
+      <%= f.radio_button(:answer, 4) %>
       <span><%= @present_ques.four %></span>
     <% end %>
     </div>
@@ -105,7 +105,7 @@
 <%= f.submit "Finish", class:"btn btn-success btn-md" %>
 <% else %>
 <%= f.submit "Next ->", class: "button btn btn-success" %>
-<%= link_to "Finish", users_finish_path, class: "btn btn-success btn-md" %>
+<%= link_to "Finish", users_finish_path, class: "btn btn-success pull-right" %>
 <% end %>
 </div>
 <% end %>
@@ -115,32 +115,32 @@
 <ul class="list-group">
   <li class="list-group-item", id="left">
     <div class="field", id="intest">
-    <%= f.label :one, class: "checkbox inline" do %>
-      <%= f.check_box :one %>
+    <%= f.label :answer, class: "radio inline" do %>
+      <%= f.radio_button(:answer, 1) %>
       <span><%= image_tag @present_ques.ione.url(:thumb) %></span>
     <% end %>
     </div>
   </li>
   <li class="list-group-item", id="left">
     <div class="field", id="intest">
-    <%= f.label :two, class: "checkbox inline" do %>
-      <%= f.check_box :two %>
+    <%= f.label :answer, class: "radio inline" do %>
+      <%= f.radio_button(:answer, 2) %>
       <span><%= image_tag @present_ques.itwo.url(:thumb) %></span>
     <% end %>
     </div>
   </li>
   <li class="list-group-item", id="left">
     <div class="field", id="intest">
-    <%= f.label :three, class: "checkbox inline" do %>
-      <%= f.check_box :three %>
+    <%= f.label :answer, class: "radio inline" do %>
+      <%= f.radio_button(:answer, 3) %>
       <span><%= image_tag @present_ques.ithree.url(:thumb) %></span>
     <% end %>
     </div>
   </li>
   <li class="list-group-item", id="left">
     <div class="field", id="intest">
-    <%= f.label :four, class: "checkbox inline" do %>
-      <%= f.check_box :four %>
+    <%= f.label :answer, class: "radio inline" do %>
+      <%= f.radio_button(:answer, 4) %>
       <span><%= image_tag @present_ques.ifour.url(:thumb) %></span>
     <% end %>
     </div>
@@ -151,8 +151,17 @@
 <%= f.submit "Finish", class:"btn btn-success btn-md" %>
 <% else %>
 <%= f.submit "Next ->", class: "button btn btn-success" %>
+</div>
+<div id = "right">
 <%= link_to "Finish", users_finish_path, class: "btn btn-success btn-md" %>
-<% end %>
 </div>
 <% end %>
 <% end %>
+<% end %>
+<h2>  </h2>
+<div class="progress">
+  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow=<%= current_user.count*100/40 %>
+  aria-valuemin="0" aria-valuemax="100" style="width:<%= current_user.count*100/40 %>%">
+    <%= current_user.count*100/40 %>% Complete
+  </div>
+</div>
