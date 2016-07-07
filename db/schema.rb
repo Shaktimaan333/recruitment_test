@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707104616) do
+ActiveRecord::Schema.define(version: 20160707124046) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -84,6 +84,10 @@ ActiveRecord::Schema.define(version: 20160707104616) do
     t.datetime "image_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "tryimage_file_name"
+    t.string   "tryimage_content_type"
+    t.integer  "tryimage_file_size"
+    t.datetime "tryimage_updated_at"
   end
 
   create_table "miscs", force: :cascade do |t|

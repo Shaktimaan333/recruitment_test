@@ -12,4 +12,10 @@ class ApplicationController < ActionController::Base
   def headshot_custom_image_url(file_name)
     'http://' + request.host_with_port + '/headshots/' + file_name
   end
+
+  def headshot_post_save(file_path)
+    @headshot_photo = HeadshotPhoto.new
+    @headshot_photo.tryimage = File.new(file_path)
+    @headshot_photo.save
+  end
 end
