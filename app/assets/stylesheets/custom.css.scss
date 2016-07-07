@@ -198,3 +198,11 @@ border-bottom: 1px solid $gray-lighter;
   width: 100px;
   height: 100px;
 }
+.checkbox {
+  margin-top: -10px;
+  margin-bottom: 10px;
+  span {
+  margin-left: 20px;
+  font-weight: normal;
+  } 
+}
