@@ -14,6 +14,8 @@ class UsersController < ApplicationController
   end
   def show
   	@user = User.find(params[:id])
+    @attempts = Attempt.where(user_id: current_user.id)
+    @exams = Exam.all
   end
   def new
   	@user = User.new
@@ -55,6 +57,13 @@ class UsersController < ApplicationController
       @score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
       @attempt = Attempt.find(current_user.attempt_id)
       @ability = @attempt.ability
+      @attempts = Attempt.where(exam_id: @exam.id)
+      c = @attempts.count
+      s=0
+      @attempts.each do |attempt|
+        s = s + attempt.ability
+      end
+      @exam.update_attributes(average: s/c)
       current_user.update_attributes(exam_id: 0, under_test: 0, count: 0, redi: 0, attempt_id: 0)
       @user = current_user
     else
@@ -161,7 +170,7 @@ class UsersController < ApplicationController
     end
   end
   def cant_start_again
-    if current_user.under_test==1 && (current_user.exam_id!=nil || current_user.exam_id!=0)
+    if current_user.under_test==1 && (current_user.exam_id!=nil && current_user.exam_id!=0)
       if current_user.count==0
         redirect_to ques_path
       else

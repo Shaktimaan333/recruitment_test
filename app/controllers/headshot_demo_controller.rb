@@ -1,5 +1,5 @@
 class HeadshotDemoController < ApplicationController
-  #before_action :giving_test, only: [:index]
+  before_action :giving_test, only: [:index]
   helper :headshot
   def index
     if current_user!=nil
@@ -15,7 +15,7 @@ class HeadshotDemoController < ApplicationController
     end
   end
   def giving_test
-    if !user_giving_test
+    if !user_giving_test && current_user.count<0
       flash[:danger] = "You cannot go directly"
       redirect_to root_path
     end

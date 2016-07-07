@@ -35,3 +35,61 @@
 <%= link_to "Refresh Difficulty", refresh_diff_path, class: "btn btn-primary btn-md" %>
 <%= link_to "Update count", update_count_path, class: "btn btn-primary btn-md" %>
 <% end %>
+
+
+<% if @attempts.count!=0 %>
+<h2 id="centre">Previous Scores</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Exam</th>
+        <th>Attempt</th>
+        <th>Ability</th>
+        <th>Average Ability</th>
+        <th>Questions Attempted</th>
+        <th>Remark</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @attempts.each do |attempt| %>
+    <tr>
+      <td><%= Exam.find(attempt.exam_id).topic %></td>
+      <td><%= attempt.freq %></td>
+      <td><%= attempt.ability %></td>
+      <td><%= Exam.find(attempt.exam_id).average %>
+      <td><%= attempt.count %></td>
+      <% if (attempt.ability - Exam.find(attempt.exam_id).average)>1 %>
+      <td><span class = "label label-success">Good</span></td>
+      <% elsif (attempt.ability - Exam.find(attempt.exam_id).average)>0 %>
+      <td><span class = "label label-warning">Average</span></td>
+      <% else %>
+      <td><span class = "label label-danger">Danger</span></td>
+      <% end %>
+    </tr>
+<% end %>
+    </tbody>
+  </table>
+  <% end %>
+
+<h1>  </h1>
+  <% if current_user.admin==true %>
+  <h2 id="centre">Exam Statistics</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Exam</th>
+        <th>Average Ability</th>
+        <th>Attempts</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @exams.each do |exam| %>
+    <tr>
+      <td><%= exam.topic %></td>
+      <td><%= exam.average %></td>
+      <td><%= Attempt.where(exam_id: exam.id).count %></td>
+    </tr>
+<% end %>
+    </tbody>
+  </table>
+  <% end %>

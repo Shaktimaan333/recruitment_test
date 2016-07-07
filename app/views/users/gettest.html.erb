@@ -1,4 +1,5 @@
 <%= provide(:title, "Choose Test Field") %>
+<p>Please Choose The Exam you want to attempt</p>
 <% @exams.each do |exam| %>
 <%= link_to "#{exam.topic} ->", ques_path(exam: exam.id), class: "btn btn-primary btn-small" %>
 <h2>  </h2>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707083744) do
+ActiveRecord::Schema.define(version: 20160707104616) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20160707083744) do
     t.datetime "updated_at",    null: false
     t.integer  "no"
     t.string   "category_name"
+    t.float    "average"
   end
 
   create_table "headshot_photos", force: :cascade do |t|
