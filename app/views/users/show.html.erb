@@ -20,59 +20,40 @@
 <p><%= @user.mobileno %></p>
 <h2>Proffesional Information</h2>
 <h5>Class X Percentage/CGPA:</h5>
+<% if !@user.classten.blank? %>
 <p><%= @user.classten %></p>
+<% else %>
+<p>nil</p>
+<% end %>
 <h5>Class XII Percentage/CGPA:</h5>
+<% if !@user.classtwelve.blank? %>
 <p><%= @user.classtwelve %></p>
+<% else %>
+<p>nil</p>
+<% end %>
 <h5>Achievements:</h5>
+<% if !@user.achievements.blank? %>
 <p><%= @user.achievements %></p>
+<% else %>
+<p>nil</p>
+<% end %>
 <h5>Experience:</h5>
+<% if !@user.experience.blank? %>
 <p><%= @user.experience %></p>
+<% else %>
+<p>nil</p>
+<% end %>
 <h5>Projects:</h5>
+<% if !@user.projects.blank? %>
 <p><%= @user.projects %></p>
+<% else %>
+<p>nil</p>
+<% end %>
 </div>
 <%= link_to "Enter test", gettest_path, class: "btn btn-primary btn-md" %>
-<% if @user.admin==true %>
-<%= link_to "Refresh Difficulty", refresh_diff_path, class: "btn btn-primary btn-md" %>
-<%= link_to "Update count", update_count_path, class: "btn btn-primary btn-md" %>
-<% end %>
-
-
-<% if @attempts.count!=0 %>
-<h2 id="centre">Previous Scores</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Exam</th>
-        <th>Attempt</th>
-        <th>Ability</th>
-        <th>Average Ability</th>
-        <th>Questions Attempted</th>
-        <th>Remark</th>
-      </tr>
-    </thead>
-    <tbody>
-    <% @attempts.each do |attempt| %>
-    <tr>
-      <td><%= Exam.find(attempt.exam_id).topic %></td>
-      <td><%= attempt.freq %></td>
-      <td><%= attempt.ability %></td>
-      <td><%= Exam.find(attempt.exam_id).average %>
-      <td><%= attempt.count %></td>
-      <% if (attempt.ability - Exam.find(attempt.exam_id).average)>1 %>
-      <td><span class = "label label-success">Good</span></td>
-      <% elsif (attempt.ability - Exam.find(attempt.exam_id).average)>0 %>
-      <td><span class = "label label-warning">Average</span></td>
-      <% else %>
-      <td><span class = "label label-danger">Danger</span></td>
-      <% end %>
-    </tr>
-<% end %>
-    </tbody>
-  </table>
-  <% end %>
-
 <h1>  </h1>
   <% if current_user.admin==true %>
+  <h2>  </h2>
   <h2 id="centre">Exam Statistics</h2>
   <table class="table">
     <thead>
