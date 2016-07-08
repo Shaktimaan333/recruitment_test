@@ -28,7 +28,7 @@
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-          var futureDate  = new Date( <%= (@attempt.start_time + 25.minutes).to_f * 1000 %> );
+          var futureDate  = new Date( <%= (@attempt.start_time + 1.minutes).to_f * 1000 %> );
           var savedTime = localStorage.getItem('currentTimerValue');
           var pathname = window.location.pathname;
           if (savedTime != null) {
@@ -43,7 +43,7 @@
           $clock.countdown(futureDate, function(event) {
             $(this).html(event.strftime('%M:%S'));
           }).on('finish.countdown', function(event) {
-              window.location.href = '/users/finish';
+              window.location.href = "/users/finish?id=<%= current_user.activation_digest %>";
           });
 
           Offline.on('down', function () {

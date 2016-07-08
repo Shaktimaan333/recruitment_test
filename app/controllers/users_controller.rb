@@ -100,7 +100,7 @@ class UsersController < ApplicationController
     while i<=6 do
       exam = Exam.find(i)
       ques = Que.where(exam_id: i)
-      ques.each do |que| 
+      ques.each do |que|
         if que.diff<=2
           exam.update_attributes(no: exam.no + 1, very_easy: exam.very_easy + 1)
         elsif que.diff>2 && que.diff<=4
@@ -160,13 +160,22 @@ class UsersController < ApplicationController
     end
   end
   def not_allowed
-    if current_user.under_test!=1 && current_user.count<=0
-      flash[:danger] = "Sorry, you can't enter the test like that !"
-      redirect_to root_path
-#    elsif current_user.exam_id==nil || current_user.exam_id==0
- #     redirect_to gettest_path
-  #  elsif current_user.count==0
-   #   redirect_to ques_path
+    if current_user.under_test==1 && params[:id]==current_user.activation_digest
+      current_user.update_attributes(redi: 5)
+      redirect_to users_finish_path
+    else
+      if current_user.under_test!=1 && current_user.count<=0
+        flash[:danger] = "Sorry, you can't enter the test like that !"
+        redirect_to root_path
+  #    elsif current_user.exam_id==nil || current_user.exam_id==0
+   #     redirect_to gettest_path
+    #  elsif current_user.count==0
+     #   redirect_to ques_path
+      elsif current_user.under_test==1 && current_user.count>0 && current_user.count<15 && params[:id]!=current_user.activation_digest && current_user.redi!=5
+        flash[:warning] = "You have to attempt 15 questions before you can manually finish the test"
+        current_user.update_attributes(redi: 2)
+        redirect_to que_path(current_user.count)
+      end
     end
   end
   def cant_start_again
