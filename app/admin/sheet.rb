@@ -19,6 +19,9 @@ index do
   column :correct
   column "Question", :ques_id
   column :updated
+  column "Difficulty", :ques_id do |id|
+    Que.find(id).diff
+  end
   actions
 end
 
