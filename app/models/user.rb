@@ -7,12 +7,12 @@ class User < ActiveRecord::Base
   before_save :downcase_email
   before_create :create_activation_digest
 	before_save { self.email = email.downcase }
-	validates :name, presence: true, length: {maximum: 50}
+	validates :name, presence: true, length: {maximum: 50}, format: {without: /\d/}
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 	validates :email, presence: true, length: {maximum: 255}, format: {with: VALID_EMAIL_REGEX}, uniqueness: { case_sensitive: false }
 	has_secure_password
 	validates :password, length: { minimum: 6 }, allow_blank: true
-	validates :mobileno, length: { minimum: 7, maximum: 12 }
+	validates :mobileno, length: { minimum: 7, maximum: 12 }, :numericality => {:only_integer => true}
 	validates :classten, length: {maximum: 5}
 	validates :classtwelve, length: {maximum: 5}
 	validates :achievements, length: {maximum: 500}
