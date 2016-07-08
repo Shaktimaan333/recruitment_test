@@ -1,4 +1,3 @@
-<% if !user_giving_test %>
 <header>
   <nav class="navbar navbar-fixed-top navbar-inverse">
     <div class="container">
@@ -12,6 +11,7 @@
         </button>
         <%= link_to "Recruitment Test", root_path, id: "logo"%>
       </div>
+      <% if !user_giving_test %>
       <nav class="collapse navbar-collapse" role="navigation">
         <ul class="nav navbar-nav navbar-right">
           <li><%= link_to "Home", root_path %></li>
@@ -35,20 +35,13 @@
           <% end %>
         </ul>
       </nav>
+      <% elsif user_giving_test %>
+      <nav class="collapse navbar-collapse" role="navigation">
+        <ul class = "nav navbar-nav navbar-right">
+          <li><%= link_to "Finish", users_finish_path %></li>
+        </ul>
+      </nav>
+      <% end %>
     </div>
   </nav>
 </header>
-<% elsif user_giving_test %>
-<header class = "nav navbar-inverse navbar-fixed-top">
-  <div class = "container-fluid">
-    <div class = "navbar-header">
-      <%= link_to "Recruitment Test", users_finish_path, id: "logo" %>
-    </div>
-    <nav>
-      <ul class = "nav navbar-nav navbar-right">
-        <li><%= link_to "Finish", users_finish_path %></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-<% end %>
