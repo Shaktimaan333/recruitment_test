@@ -3,8 +3,9 @@ class Attempt < ActiveRecord::Base
   belongs_to :user
   belongs_to :exam
   def display_name
-    if User.find_by(id: self.user_id).name!=nil && self.freq!=nil
-      "#{User.find_by(id: self.user_id).name}, #{self.freq}"
+    user = User.find_by(id: self.user_id)
+    if user!=nil && self.freq!=nil
+      "#{user.name}, #{self.freq}"
     end
   end
 end
