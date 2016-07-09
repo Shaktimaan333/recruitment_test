@@ -90,6 +90,7 @@ Rails.application.configure do
     },
     url: ":s3_alias_url",
     s3_host_alias: 'dnjmxa9qvr7tm.cloudfront.net'
+    path: "/:class/:attachment/:id_partition/:style/:filename"
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
