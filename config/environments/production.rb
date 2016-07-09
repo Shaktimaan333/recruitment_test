@@ -87,7 +87,9 @@ Rails.application.configure do
       access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
       secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'),
       s3_region: ENV.fetch('AWS_REGION')
-    }
+    },
+    url: ":s3_alias_url",
+    s3_host_alias: 'dnjmxa9qvr7tm.cloudfront.net'
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
