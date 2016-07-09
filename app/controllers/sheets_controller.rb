@@ -1,6 +1,7 @@
 class SheetsController < ApplicationController
   before_action :logged_in_user, only: [:update]
   before_action :cant_go_back, only: [:update]
+  has_mobile_fu
   def new
   end
   def update
@@ -9,7 +10,7 @@ class SheetsController < ApplicationController
     @sheet = Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: @score.ques_id)
     @ques = Que.find_by(id: @score.ques_id)
     a=0
-    if current_user.count==1
+    if current_user.count==1 && !is_mobile_device?
       if !File.exist?"public/headshots/#{current_user.id}_#{current_user.freq}_#{current_user.count}.jpg"
         current_user.update_attributes(redi: -1)
         redirect_to que_path(current_user.count)
@@ -18,7 +19,7 @@ class SheetsController < ApplicationController
         current_user.update_attributes(redi: 0)
       end
     end
-    
+
     if @sheet.update_attributes(sheet_params)
       @sheet.update_attributes(updated: 1)
     end

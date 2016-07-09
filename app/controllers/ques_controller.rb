@@ -3,6 +3,7 @@ class QuesController < ApplicationController
   before_action :stay, only: [:show]
   before_action :not_allowed, only: [:show]
   before_action :test_started, only: [:index]
+  has_mobile_fu
   ##before_action :cant_go_back, only: [:show, :index]
   ##before_action :cant_go_to_random_position, only: [:show]
   def new
@@ -38,6 +39,7 @@ class QuesController < ApplicationController
         current_user.update_attributes(count: current_user.count + 1)
       end
     end
+    @at = is_mobile_device?
 
 =begin
     if current_user.count==0
@@ -93,6 +95,7 @@ class QuesController < ApplicationController
         if current_user.redi==2
           current_user.update_attributes(redi: 0)
         end
+
       else
         i=1
         c=0

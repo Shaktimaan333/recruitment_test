@@ -1,5 +1,5 @@
 <%= provide(:title, "#{@ti} Test Question-#{@p}") %>
-<% if (current_user.count==1) && current_user.under_test==1 %>
+<% if (current_user.count==1) && current_user.under_test==1 && !@at %>
 <% if current_user.redi!=-1 %>
   <div class = "alert alert-info">
   "Before attempting this question please click on the button below for identity proof"
@@ -28,7 +28,7 @@
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-          var futureDate  = new Date( <%= (@attempt.start_time + 1.minutes).to_f * 1000 %> );
+          var futureDate  = new Date( <%= (@attempt.start_time + 25.minutes).to_f * 1000 %> );
           var savedTime = localStorage.getItem('currentTimerValue');
           var pathname = window.location.pathname;
           if (savedTime != null) {
