@@ -89,7 +89,7 @@ Rails.application.configure do
       s3_region: ENV.fetch('AWS_REGION')
     },
     url: ":s3_alias_url",
-    s3_host_alias: 'dnjmxa9qvr7tm.cloudfront.net'
+    s3_host_alias: 'dnjmxa9qvr7tm.cloudfront.net',
     path: "/:class/:attachment/:id_partition/:style/:filename"
   }
 
