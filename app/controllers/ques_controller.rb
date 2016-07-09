@@ -576,7 +576,7 @@ class QuesController < ApplicationController
 =end
   end
   def index
-    if Misc.find_by(user_id: current_user.id, attempt: current_user.freq + 1)
+    if Misc.find_by(user_id: current_user.id, attempt: current_user.freq + 1) && current_user.exam_id!=nil && current_user.exam_id!=0
       @exam = Exam.find(current_user.exam_id)
       @misc = Misc.find_by(user_id: current_user.id, attempt: current_user.freq + 1)
     else

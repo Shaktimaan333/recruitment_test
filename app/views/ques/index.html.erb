@@ -1,10 +1,20 @@
 <%= provide(:title, "Basic Info") %>
 <h1>Basic Info</h1>
-<h2>You have chosen <%= @exam.topic %> as your Topic for the test</h2>
-<p>The test contains questions solely related to the topic. The questions are multiple choice with onely one correct option. The Time given for the test is 25 minutes.
-You can attempt a maximum of 40 questions. You can finish the test any time by clicking on the finish button.
+<div class = "container-fluid bg-grey">
+<h4>You have chosen <kbd><%= @exam.topic %></kbd> as your Topic for the test</h4>
+<p>The test contains questions solely related to the topic. The questions are multiple choice with only one correct option. The Time given for the test is 25 minutes.
+You can attempt a maximum of 40 questions. You have to attempt at least 15 questions before you can manually finish the test.</p>
+</div>
 <h2>  </h2>
-<p>To start the test click on the button below.</p>
+<p>Please read the instructions given below -</p>
+<button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#demo">Dropdown Terms and Conditions</button>
+  <div id="demo" class="collapse">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  </div>
+
+<h5>  </h5>
 <%= form_for @misc do |f| %>
 <div class = "field">
 <%= f.label :terms, class: "checkbox-inline" do %>
@@ -13,5 +23,5 @@ You can attempt a maximum of 40 questions. You can finish the test any time by c
 <% end %>
 <h3> </h3>
 </div>
-<%= f.submit "Enter test", class: "button btn btn-success btn-md" %> 
+<%= f.submit "Start test", class: "button btn btn-success btn-md" %>
 <% end %>

@@ -1,55 +1,87 @@
 <% provide(:title, @user.name) %>
-<div class="row">
-<aside class="col-md-4">
-<section class="user_info">
-<h1>
-<%= gravatar_for @user %>
+<div class = "middle">
+  <%= gravatar_for @user %>
+</div>
+<div class = "row">
+<h2>
+  <div class = "text-center">
 <%= @user.name %>
 <% if @user.admin==true %>
 <span class = "label label-danger">Admin</span>
 <% end %>
-</h1>
-</section>
-</aside>
 </div>
-<div class = "container fluid" %>
-<h2>Contact Information</h2>
-<h5>Email:</h5>
-<p><%= @user.email %></p>
-<h5>Mobile No:</h5>
-<p><%= @user.mobileno %></p>
-<h2>Proffesional Information</h2>
-<h5>Class X Percentage/CGPA:</h5>
-<% if !@user.classten.blank? %>
-<p><%= @user.classten %></p>
-<% else %>
-<p>nil</p>
-<% end %>
-<h5>Class XII Percentage/CGPA:</h5>
-<% if !@user.classtwelve.blank? %>
-<p><%= @user.classtwelve %></p>
-<% else %>
-<p>nil</p>
-<% end %>
-<h5>Achievements:</h5>
-<% if !@user.achievements.blank? %>
-<p><%= @user.achievements %></p>
-<% else %>
-<p>nil</p>
-<% end %>
-<h5>Experience:</h5>
-<% if !@user.experience.blank? %>
-<p><%= @user.experience %></p>
-<% else %>
-<p>nil</p>
-<% end %>
-<h5>Projects:</h5>
-<% if !@user.projects.blank? %>
-<p><%= @user.projects %></p>
-<% else %>
-<p>nil</p>
-<% end %>
+</h2>
 </div>
+<div>
+<h2>  </h2>
+</div>
+<div class = "container-fluid bg-grey">
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#contact">Contact Information</a></li>
+  <li><a data-toggle="tab" href="#professional">Professional Information</a></li>
+</ul>
+<div class="tab-content">
+  <div id="contact" class="tab-pane fade in active">
+    <div class="row">
+      <div class="col-sm-6 text-center">
+        <h5>Email:</h5>
+        <p><%= @user.email %></p>
+      </div>
+      <div class="col-sm-6 text-center">
+        <h5>Mobile No:</h5>
+        <p><%= @user.mobileno %></p>
+      </div>
+    </div>
+  </div>
+  <div id="professional" class="tab-pane fade">
+    <div class="row">
+      <div class="col-sm-6 text-center">
+        <h5>Class X Percentage/CGPA:</h5>
+        <% if !@user.classten.blank? %>
+        <p><%= @user.classten %></p>
+        <% else %>
+        <p>nil</p>
+        <% end %>
+      </div>
+      <div class="col-sm-6 text-center">
+        <h5>Class XII Percentage/CGPA:</h5>
+        <% if !@user.classtwelve.blank? %>
+        <p><%= @user.classtwelve %></p>
+        <% else %>
+        <p>nil</p>
+        <% end %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 text-center">
+        <h5>Achievements:</h5>
+        <% if !@user.achievements.blank? %>
+        <p><%= @user.achievements %></p>
+        <% else %>
+        <p>nil</p>
+        <% end %>
+      </div>
+      <div class="col-sm-6 text-center">
+        <h5>Experience:</h5>
+        <% if !@user.experience.blank? %>
+        <p><%= @user.experience %></p>
+        <% else %>
+        <p>nil</p>
+        <% end %>
+      </div>
+    </div>
+    <div class = "text-center">
+      <h5>Projects:</h5>
+      <% if !@user.projects.blank? %>
+      <p><%= @user.projects %></p>
+      <% else %>
+      <p>nil</p>
+      <% end %>
+    </div>
+  </div>
+</div>
+</div>
+<h2>   </h2>
 <%= link_to "Enter test", gettest_path, class: "btn btn-primary btn-md" %>
 <h1>  </h1>
   <% if current_user.admin==true %>

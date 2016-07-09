@@ -41,7 +41,7 @@ letter-spacing: -2px;
 margin-bottom: 30px;
 text-align: center;
 }
-h2 {
+#profile{
 font-size: 1.2em;
 letter-spacing: -1px;
 margin-bottom: 30px;
@@ -163,7 +163,7 @@ color: $state-danger-text;
   span {
   margin-left: 20px;
   font-weight: normal;
-  } 
+  }
 }
 #session_remember_me {
   width: auto;
@@ -204,8 +204,46 @@ border-bottom: 1px solid $gray-lighter;
   span {
   margin-left: 20px;
   font-weight: normal;
-  } 
+  }
 }
 #centre {
   text-align: center;
+}
+.jumbotron {
+    background-color: #80ccff; /* Orange */
+    color: #ffffff;
+    padding: 100px 25px;
+}
+.container-fluid {
+    padding: 60px 50px;
+}
+.logo {
+    font-size: 200px;
+}
+@media screen and (max-width: 768px) {
+    .col-sm-4 {
+        text-align: center;
+        margin: 25px 0;
+    }
+}
+.logo-small {
+    color: #80ccff;
+    font-size: 50px;
+}
+.logo {
+    color: #80ccff;
+    font-size: 200px;
+}
+.bg-grey {
+    background-color: #f6f6f6;
+}
+.middle {
+	margin-left: 525px;
+}
+.navbar {
+    -webkit-box-shadow: 0 8px 6px -6px #999;
+    -moz-box-shadow: 0 8px 6px -6px #999;
+    box-shadow: 0 8px 6px -6px #999;
+
+    /* the rest of your styling */
 }

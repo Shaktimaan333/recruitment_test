@@ -1,18 +1,18 @@
 <% provide(:title, "Edit user") %>
+<div class = "container-fluid bg-grey">
 <h1>Update Profile</h1>
-
 <div class = "row">
 <div class = "col-md-6 col-md-offset-3">
 <%= form_for(@user) do |f| %>
 <%= render 'shared/error_messages' %>
 <%= f.label :name %>
 <%= f.text_field :name, class: 'form-control' %>
-<h2>Contact Information</h2>
+<h4 class = "text-center">Contact Information</h4>
 <%= f.label :email %>
 <%= f.email_field :email, class: 'form-control' %>
 <%= f.label :mobileno, "Mobile No" %>
 <%= f.text_field :mobileno, class: 'form-control' %>
-<h2>Professional Information</h2>
+<h4 class = "text-center">Professional Information</h4>
 <%= f.label :classten, "Class X" %>
 <%= f.text_field :classten, class: 'form-control' %>
 <%= f.label :classtwelve, "Class XII" %>
@@ -32,6 +32,7 @@
 <div class="gravatar_edit">
 <%= gravatar_for @user %>
 <a href="http://gravatar.com/emails" target=_blank>change</a>
+</div>
 </div>
 </div>
 </div>
