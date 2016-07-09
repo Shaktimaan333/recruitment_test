@@ -213,6 +213,7 @@ border-bottom: 1px solid $gray-lighter;
     background-color: #80ccff; /* Orange */
     color: #ffffff;
     padding: 100px 25px;
+		width: 100%;
 }
 .container-fluid {
     padding: 60px 50px;
@@ -250,4 +251,37 @@ border-bottom: 1px solid $gray-lighter;
 }
 .top {
 	margin-top: 150px;
+}
+.slideanim {visibility:hidden;}
+.slide {
+    /* The name of the animation */
+    animation-name: slide;
+    -webkit-animation-name: slide;
+    /* The duration of the animation */
+    animation-duration: 1s;
+    -webkit-animation-duration: 1s;
+    /* Make the element visible */
+    visibility: visible;
+}
+
+/* Go from 0% to 100% opacity (see-through) and specify the percentage from when to slide in the element along the Y-axis */
+@keyframes slide {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(70%);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0%);
+    }
+}
+@-webkit-keyframes slide {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(70%);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0%);
+    }
 }

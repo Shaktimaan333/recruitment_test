@@ -40,7 +40,7 @@
 <div class="container-fluid text-center">
   <h2>The Exam</h2>
   <br>
-  <div class="row">
+  <div class="row slideanim">
     <div class="col-sm-4">
       <span class="glyphicon glyphicon-book logo-small"></span>
       <h4>Huge Question Bank</h4>
@@ -59,3 +59,15 @@
     </div>
     <br><br>
 </div>
+<script type="text/javascript">
+$(window).scroll(function() {
+  $(".slideanim").each(function(){
+    var pos = $(this).offset().top;
+
+    var winTop = $(window).scrollTop();
+    if (pos < winTop + 600) {
+      $(this).addClass("slide");
+    }
+  });
+});
+</script>
