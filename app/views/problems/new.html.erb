@@ -1,0 +1,28 @@
+<% provide(:title, "Contact") %>
+<div class="container-fluid bg-grey">
+  <h2 class="text-center">CONTACT</h2>
+  <div class="row">
+    <div class="col-sm-5">
+      <p>Contact us and we'll get back to you within 24 hours.</p>
+      <p><span class="glyphicon glyphicon-map-marker"></span> Padpadganj Industrial Area,New Delhi - 110092</p>
+      <p><span class="glyphicon glyphicon-phone"></span> +91 (011) 4562 6547</p>
+      <p><span class="glyphicon glyphicon-envelope"></span> info@truehb.com</p>
+    </div>
+    <div class="col-sm-7">
+      <%= form_for(@problem) do |f| %>
+      <%= render 'shared/errors_messages' %>
+      <div class="row">
+      <%= f.label :email %>
+      <%= f.text_field :email, class: 'form-control' %>
+      </div>
+      <div class="row">
+      <%= f.label :query %>
+      <%= f.text_area :query, class: 'form-control' %>
+      </div>
+      <div class="row">
+        <%= f.submit "Submit", class: "btn btn-default pull-right" %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
