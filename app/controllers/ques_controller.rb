@@ -27,8 +27,12 @@ class QuesController < ApplicationController
       exam = Exam.find(current_user.exam_id)
       i=0
       a = Array.new
+      session[:no] = Array.new
+      session[:cat] = Array.new
       exam.categorys.each do |cat|
         a[i] = cat.id
+        session[:no][i] = 0
+        session[:cat][i] = cat.id
         i = i + 1
       end
       no = rand(0..(a.size-1))
@@ -132,6 +136,8 @@ class QuesController < ApplicationController
         no = rand(0..(a.size-1))
         que = Que.find_by(id: a[no])
         @present_ques = que
+        hash = Hash[session[:cat].map.with_index.to_a]
+        session[:no][hash[@present_ques.category_id]] += 1
         @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
         score.update_attributes(ques_id: @present_ques.id)
         @score = score
@@ -248,7 +254,7 @@ class QuesController < ApplicationController
               a[i] = que.id
               i = i + 1
             end
-            if difference<=1
+            if difference<=1 && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
               bt[j] = que.id
               j = j + 1
             end
