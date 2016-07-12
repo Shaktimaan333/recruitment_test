@@ -1,9 +1,11 @@
 <% provide(:title, @user.name) %>
-<div class = "middle">
-  <%= gravatar_for @user %>
-</div>
+<!-- <div class="row">
+  <div class="col-md-12"> -->
+    <%= gravatar_for @user %>
+  <!-- </div>
+</div> -->
 <div class = "row">
-<div class = "text-center top">
+<div class = "text-center">
   <h4> </h4>
   <h2>
 <%= @user.name %>

@@ -1,4 +1,5 @@
 <%= provide(:title, "#{@ti} Test Question-#{@p}") %>
+<body onload="myFunction()">
 <% if (current_user.count==1) && current_user.under_test==1 && !@at %>
 <% if current_user.redi!=-1 %>
   <div class = "alert alert-info">
@@ -61,7 +62,7 @@
 
 		</script>
 <p>This is a multiple choice question with exactly one correct option</p>
-<h3><%= @present_ques.question %></h3>
+<h3><%= @present_ques.question %>, Ability: <%= @attempt.ability %>, Category: <%= @present_ques.category_id %>, Diff: <%= @present_ques.diff %>, Correct: <%= @present_ques.correct %></h3>
 <% if !@present_ques.one.blank? %>
 <%= form_for(@sheet) do |f| %>
 
@@ -165,3 +166,9 @@
     <%= current_user.count*100/40 %>% Complete
   </div>
 </div>
+<script text = "text/javascript">
+  function myFunction() {
+    <%= ready %>
+  }
+</script>
+</body>

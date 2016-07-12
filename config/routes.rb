@@ -44,6 +44,8 @@ Rails.application.routes.draw do
   get 'update_count' => 'users#update_count'
   get 'just_fake' => 'ques#just_fake'
   get 'reset' => 'users#reset'
+  get 'users/ready'
+  get 'ques/ready'
   resources :users
   resources :ques
   resources :sheets

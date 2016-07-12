@@ -157,21 +157,40 @@ class QuesController < ApplicationController
         end
       else
         @attempt = Attempt.find(current_user.attempt_id)
-        b = @attempt.ability
-        s = 0
-        t = 0
-        correct_count = 0
-        Sheet.where("attempt_id = ?", current_user.attempt_id).each do |a|
-          question = Que.find(a.ques_id)
-          pm = (Math.exp(b - question.diff)/(1 + Math.exp(b - question.diff)))
-          s = s + pm
-          t = t + pm * (1 - pm)
-          if (a.correct?)
-            correct_count += 1
+        if Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 1).correct? && @attempt.ques_correct != nil
+          @attempt.update_attributes(ability: session[:if_correct_ability])
+          @present_ques = Que.find(@attempt.ques_correct)
+          hash = Hash[session[:cat].map.with_index.to_a]
+          session[:no][hash[@present_ques.category_id]] += 1
+          @ability = @attempt.ability
+          @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
+          score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
+          @score = score
+        elsif !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 1).correct? && @attempt.ques_incorrect != nil
+          @attempt.update_attributes(ability: session[:if_incorrect_ability])
+          @present_ques = Que.find(@attempt.ques_incorrect)
+          hash = Hash[session[:cat].map.with_index.to_a]
+          session[:no][hash[@present_ques.category_id]] += 1
+          @ability = @attempt.ability
+          @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
+          score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
+          @score = score
+        else
+          b = @attempt.ability
+          s = 0
+          t = 0
+          correct_count = 0
+          Sheet.where("attempt_id = ?", current_user.attempt_id).each do |a|
+            question = Que.find(a.ques_id)
+            pm = (Math.exp(b - question.diff)/(1 + Math.exp(b - question.diff)))
+            s = s + pm
+            t = t + pm * (1 - pm)
+            if (a.correct?)
+              correct_count += 1
+            end
           end
-        end
-        @attempt = Attempt.find(current_user.attempt_id)
-        @attempt.update_attributes(ability: b + (correct_count - s)/t)
+          @attempt = Attempt.find(current_user.attempt_id)
+          @attempt.update_attributes(ability: b + (correct_count - s)/t)
 =begin
         if @attempt.ability >= -0.5 && @attempt.ability<5.5
           rounded_part = @attempt.ability.round
@@ -232,39 +251,39 @@ class QuesController < ApplicationController
         end
         no = rand(0..(a.size-1))
 =end
-        min = Float::INFINITY
-        b = @attempt.ability
-        pre_id = 0
-        j = 0
-        bt = Array.new
-        exam = Exam.find(Attempt.find(current_user.attempt_id).exam_id)
-        exam.ques.each do |que|
-          if que.diff!=nil
-            difference = ((b - que.diff).abs).to_f
-            if difference<min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
-              min = difference
+          min = Float::INFINITY
+          b = @attempt.ability
+          pre_id = 0
+          j = 0
+          bt = Array.new
+          exam = Exam.find(Attempt.find(current_user.attempt_id).exam_id)
+          exam.ques.each do |que|
+            if que.diff!=nil
+              difference = ((b - que.diff).abs).to_f
+              if difference<min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
+                min = difference
+              end
             end
           end
-        end
-        i = 0
-        a = Array.new
-        exam.ques.each do |que|
-          if que.diff!=nil
-            difference = ((b - que.diff).abs).to_f
-            if difference==min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
-              a[i] = que.id
-              i = i + 1
-            end
+          i = 0
+          a = Array.new
+          exam.ques.each do |que|
+            if que.diff!=nil
+              difference = ((b - que.diff).abs).to_f
+              if difference==min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
+                a[i] = que.id
+                i = i + 1
+              end
 =begin
             if difference<=1 && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
               bt[j] = que.id
               j = j + 1
             end
 =end
+            end
           end
-        end
-        prev_cat_id = Que.find(score.ques_id).category_id
-        exam = Exam.find(current_user.exam_id)
+          prev_cat_id = Que.find(score.ques_id).category_id
+          exam = Exam.find(current_user.exam_id)
 =begin
         k = 0
         t = Array.new
@@ -274,47 +293,48 @@ class QuesController < ApplicationController
         end
         t.sort!
 =end
-        cat_ques = Array.new
-        j = 0
-        z = 0
-        while j<i do
-          if !cat_ques.include?(Que.find(a[j]).category_id)
-            cat_ques[z] = Que.find(a[j]).category_id
-            z = z + 1
-          end
-          j = j + 1
-        end
-        cat_ques.sort!
-        counter = 0
-        arc = Array.new
-        z = 0
-        session[:no], session[:cat] = session[:no].zip(session[:cat]).sort.transpose
-        while counter <= session[:zack] do
-          value = session[:cat][counter]
-          if cat_ques.include?(value)
-            k = 0
-            z = 0
-            while k<i do
-              if Que.find(a[k]).category_id == session[:cat][counter]
-                arc[z] = a[k]
-                z = z + 1
-              end
-              k = k + 1
+          cat_ques = Array.new
+          j = 0
+          z = 0
+          while j<i do
+            if !cat_ques.include?(Que.find(a[j]).category_id)
+              cat_ques[z] = Que.find(a[j]).category_id
+              z = z + 1
             end
+            j = j + 1
           end
-          if !arc.blank?
-            break
+          cat_ques.sort!
+          counter = 0
+          arc = Array.new
+          z = 0
+          session[:no], session[:cat] = session[:no].zip(session[:cat]).sort.transpose
+          while counter <= session[:zack] do
+            value = session[:cat][counter]
+            if cat_ques.include?(value)
+              k = 0
+              z = 0
+              while k<i do
+                if Que.find(a[k]).category_id == session[:cat][counter]
+                  arc[z] = a[k]
+                  z = z + 1
+                end
+                k = k + 1
+              end
+            end
+            if !arc.blank?
+              break
+            end
+            counter = counter + 1
           end
-          counter = counter + 1
+          no = rand(0..(arc.size-1))
+          @present_ques = Que.find(arc[no])
+          hash = Hash[session[:cat].map.with_index.to_a]
+          session[:no][hash[@present_ques.category_id]] += 1
+          @ability = @attempt.ability
+          @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
+          score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
+          @score = score
         end
-        no = rand(0..(arc.size-1))
-        @present_ques = Que.find(arc[no])
-        hash = Hash[session[:cat].map.with_index.to_a]
-        session[:no][hash[@present_ques.category_id]] += 1
-        @ability = @attempt.ability
-        @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
-        score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
-        @score = score
       end
     end
 
@@ -634,6 +654,7 @@ class QuesController < ApplicationController
      #      end
     #   end
 =end
+    @attempt.update_attributes(ques_correct: nil, ques_incorrect: nil)
   end
   def index
     if Misc.find_by(user_id: current_user.id, attempt: current_user.freq + 1) && current_user.exam_id!=nil && current_user.exam_id!=0
@@ -648,6 +669,153 @@ class QuesController < ApplicationController
   def just_fake
     redirect_to "http://localhost:3000/headshot_demo/index"
   end
+  def ready
+    score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
+    attempt = Attempt.find(current_user.attempt_id)
+    b = attempt.ability
+    s = 0
+    t = 0
+    correct_count = 0
+    Sheet.where("attempt_id = ?", current_user.attempt_id).each do |a|
+      question = Que.find(a.ques_id)
+      pm = (Math.exp(b - question.diff)/(1 + Math.exp(b - question.diff)))
+      s = s + pm
+      t = t + pm * (1 - pm)
+      if a.correct == true
+        correct_count += 1
+      end
+    end
+    if_correct_ability = b + (correct_count + 1 - s)/t
+    if_incorrect_ability = b + (correct_count - s)/t
+    session[:if_correct_ability] = if_correct_ability
+    session[:if_incorrect_ability] = if_incorrect_ability
+    min = Float::INFINITY
+    b = if_correct_ability
+    pre_id = 0
+    j = 0
+    bt = Array.new
+    exam = Exam.find(Attempt.find(current_user.attempt_id).exam_id)
+    exam.ques.each do |que|
+      if que.diff!=nil
+        difference = ((b - que.diff).abs).to_f
+        if difference<min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
+          min = difference
+        end
+      end
+    end
+    i = 0
+    a = Array.new
+    exam.ques.each do |que|
+      if que.diff!=nil
+        difference = ((b - que.diff).abs).to_f
+        if difference==min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
+          a[i] = que.id
+          i = i + 1
+        end
+      end
+    end
+    prev_cat_id = Que.find(score.ques_id).category_id
+    exam = Exam.find(current_user.exam_id)
+    cat_ques = Array.new
+    j = 0
+    z = 0
+    while j<i do
+      if !cat_ques.include?(Que.find(a[j]).category_id)
+        cat_ques[z] = Que.find(a[j]).category_id
+        z = z + 1
+      end
+      j = j + 1
+    end
+    cat_ques.sort!
+    counter = 0
+    arc = Array.new
+    z = 0
+    session[:no], session[:cat] = session[:no].zip(session[:cat]).sort.transpose
+    while counter <= session[:zack] do
+      value = session[:cat][counter]
+      if cat_ques.include?(value)
+        k = 0
+        z = 0
+        while k<i do
+          if Que.find(a[k]).category_id == session[:cat][counter]
+            arc[z] = a[k]
+            z = z + 1
+          end
+          k = k + 1
+        end
+      end
+      if !arc.blank?
+        break
+      end
+      counter = counter + 1
+    end
+    no = rand(0..(arc.size-1))
+    attempt.update_attributes(ques_correct: arc[no])
+    #For Incorrect attempt
+    min = Float::INFINITY
+    b = if_incorrect_ability
+    pre_id = 0
+    j = 0
+    bt = Array.new
+    exam = Exam.find(Attempt.find(current_user.attempt_id).exam_id)
+    exam.ques.each do |que|
+      if que.diff!=nil
+        difference = ((b - que.diff).abs).to_f
+        if difference<min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
+          min = difference
+        end
+      end
+    end
+    i = 0
+    a = Array.new
+    exam.ques.each do |que|
+      if que.diff!=nil
+        difference = ((b - que.diff).abs).to_f
+        if difference==min && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
+          a[i] = que.id
+          i = i + 1
+        end
+      end
+    end
+    prev_cat_id = Que.find(score.ques_id).category_id
+    exam = Exam.find(current_user.exam_id)
+    cat_ques = Array.new
+    j = 0
+    z = 0
+    while j<i do
+      if !cat_ques.include?(Que.find(a[j]).category_id)
+        cat_ques[z] = Que.find(a[j]).category_id
+        z = z + 1
+      end
+      j = j + 1
+    end
+    cat_ques.sort!
+    counter = 0
+    arc = Array.new
+    z = 0
+    session[:no], session[:cat] = session[:no].zip(session[:cat]).sort.transpose
+    while counter <= session[:zack] do
+      value = session[:cat][counter]
+      if cat_ques.include?(value)
+        k = 0
+        z = 0
+        while k<i do
+          if Que.find(a[k]).category_id == session[:cat][counter]
+            arc[z] = a[k]
+            z = z + 1
+          end
+          k = k + 1
+        end
+      end
+      if !arc.blank?
+        break
+      end
+      counter = counter + 1
+    end
+    no = rand(0..(arc.size-1))
+    attempt.update_attributes(ques_incorrect: arc[no])
+  end
+  helper_method :ready
   private
   def stay
     if current_user.count>0
