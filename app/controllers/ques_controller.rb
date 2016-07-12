@@ -35,6 +35,7 @@ class QuesController < ApplicationController
         session[:cat][i] = cat.id
         i = i + 1
       end
+      session[:zack] = i - 1
       no = rand(0..(a.size-1))
       score = Score.create(user_id: current_user.id, mark: 0, attempt: current_user.freq, exam_id: current_user.exam_id, last: -1, category_id: exam.categorys.first.id)
     else
@@ -254,14 +255,17 @@ class QuesController < ApplicationController
               a[i] = que.id
               i = i + 1
             end
+=begin
             if difference<=1 && !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: que.id, updated: 1)
               bt[j] = que.id
               j = j + 1
             end
+=end
           end
         end
         prev_cat_id = Que.find(score.ques_id).category_id
         exam = Exam.find(current_user.exam_id)
+=begin
         k = 0
         t = Array.new
         exam.categorys.each do |cat|
@@ -269,6 +273,56 @@ class QuesController < ApplicationController
           k = k + 1
         end
         t.sort!
+=end
+        cat_ques = Array.new
+        j = 0
+        z = 0
+        while j<i do
+          if !cat_ques.include?(Que.find(a[j]).category_id)
+            cat_ques[z] = Que.find(a[j]).category_id
+            z = z + 1
+          end
+          j = j + 1
+        end
+        cat_ques.sort!
+        counter = 0
+        arc = Array.new
+        z = 0
+        session[:no], session[:cat] = session[:no].zip(session[:cat]).sort.transpose
+        while counter <= session[:zack] do
+          value = session[:cat][counter]
+          if cat_ques.include?(value)
+            k = 0
+            z = 0
+            while k<i do
+              if Que.find(a[k]).category_id == session[:cat][counter]
+                arc[z] = a[k]
+                z = z + 1
+              end
+              k = k + 1
+            end
+          end
+          if !arc.blank?
+            break
+          end
+          counter = counter + 1
+        end
+        no = rand(0..(arc.size-1))
+        @present_ques = Que.find(arc[no])
+        hash = Hash[session[:cat].map.with_index.to_a]
+        session[:no][hash[@present_ques.category_id]] += 1
+        @ability = @attempt.ability
+        @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
+        score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
+        @score = score
+      end
+    end
+
+
+
+
+
+=begin
         f=0
         count = 0
         while f!=1 do
@@ -325,7 +379,7 @@ class QuesController < ApplicationController
         @score = score
       end
     end
-
+=end
 
 
 

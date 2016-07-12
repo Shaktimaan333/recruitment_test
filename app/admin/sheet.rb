@@ -22,6 +22,7 @@ index do
   column "Difficulty", :ques_id do |id|
     Que.find(id).diff
   end
+  column :current_ability
   actions
 end
 

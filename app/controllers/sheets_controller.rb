@@ -21,7 +21,7 @@ class SheetsController < ApplicationController
     end
 
     if @sheet.update_attributes(sheet_params)
-      @sheet.update_attributes(updated: 1)
+      @sheet.update_attributes(updated: 1, current_ability: @attempt.ability)
     end
     integer_form = @ques.correct.to_i
     integer_fo = @sheet.answer.to_i
