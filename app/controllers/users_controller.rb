@@ -123,8 +123,6 @@ class UsersController < ApplicationController
     Misc.where(user_id: current_user.id).each do |mi|
       mi.destroy
     end
-    flash[:success] = "You are good to attend the test again"
-    redirect_to root_path
   end
   private
   def user_params
