@@ -7,7 +7,10 @@ class SheetsController < ApplicationController
   def update
     @attempt = Attempt.find(current_user.attempt_id)
     @score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
-    @sheet = Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: @score.ques_id)
+    sheet = Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: @score.ques_id)
+    @sheet = Sheet.new(sheet_params)
+    @sheet.update_attributes(attempt_id: current_user.attempt_id, ques_id: @score.ques_id, updated: 1)
+    sheet.destroy
     @ques = Que.find_by(id: @score.ques_id)
     a=0
     if current_user.count==1 && !is_mobile_device?
@@ -20,7 +23,7 @@ class SheetsController < ApplicationController
       end
     end
 
-    if @sheet.update_attributes(sheet_params)
+    if @sheet.save
       @sheet.update_attributes(updated: 1, current_ability: @attempt.ability)
     end
     integer_form = @ques.correct.to_i
@@ -104,7 +107,18 @@ class SheetsController < ApplicationController
   end
   private
   def sheet_params
-    params.require(:sheet).permit(:one, :two, :three, :four, :answer)
+    if params[:sheet].blank?
+      params.fetch(:answer, {})
+    else
+      params.require(:sheet).permit(:answer)
+    end
+=begin
+    if params.fetch(:answer, {})[:answer] != nil
+      params.fetch(:answer, {answer: 1})
+    else
+      params.fetch(:answer, {})
+    end
+=end
   end
   private
   def logged_in_user
