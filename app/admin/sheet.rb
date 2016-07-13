@@ -20,7 +20,11 @@ index do
   column "Question", :ques_id
   column :updated
   column "Difficulty", :ques_id do |id|
-    Que.find(id).diff
+    if Que.find(id)
+      Que.find(id).diff
+    else
+      "Question Deleted"
+    end
   end
   column :current_ability
   actions
