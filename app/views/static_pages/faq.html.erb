@@ -1,3 +1,90 @@
 <% provide(:title, "FAQ") %>
-<h1>Frequently asked questions</h1>
-<p>This page contains the answers to problems that frequently pop up in your mind</p>
+<div class = "container-fluid bg-grey">
+<h1>FAQ's</h1>
+<p class = "text-center">This page contains the answers to problems that frequently pop up in your mind</p>
+<div class="panel panel-default">
+  <div class="panel-body" data-toggle="collapse" data-target="#demo1">
+    <p class = "text-bold">Q-1</p><p>How do I sign up?</p>
+    <div id="demo1" class="collapse dark-grey">
+    <p>To register for Talent Acquisition Portal follow the following steps :</p>
+    <p>1. Go to the <%= link_to "Sign Up Page", signup_path %> via signup button on home page </p>
+    <p>2. Enter the required information</p>
+    <p>3. When you click on submit, an activation mail will be sent to your email-id</p>
+    <p>4. Click on Activate link in the email, and voilà! you have a profile on Talent Acquisition Portal</p>
+    </div>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body" data-toggle="collapse" data-target="#demo2">
+    <p class = "text-bold">Q-2</p><p>I did not recieve an activation email on my registered email address. What should I do?</p>
+    <div id="demo2" class="collapse dark-grey">
+    <p>There could be various possibilities:</p>
+    <p>1. If activation email not received in inbox kindly check the spam folder for Activation e-mail</p>
+    <p>2. Please confirm might be activation email on a different email other than you checking</p>
+    <p>3. It could be a possibility that you have entered incorrect e-mail address while registration</p>
+    <p>4. If the problem persists, please contact us throgh our contact page</p>
+    </div>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body" data-toggle="collapse" data-target="#demo3">
+    <p class = "text-bold">Q-3</p><p>Do I need to pay for the test?</p>
+    <div id="demo3" class="collapse dark-grey">
+    <p>No, The Talent Acquisition Portal is totally free. Anybody excited to join Wrig, can prove himself/herself through the portal.</p>
+    </div>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body" data-toggle="collapse" data-target="#demo4">
+    <p class = "text-bold">Q-4</p><p>How to take the test?</p>
+    <div id="demo4" class="collapse dark-grey">
+    <p>1. <%= link_to "Login", login_path %> on Talent Acquisition Portal (If you do not have an id, <%= link_to "Sign Up", signup_path %> ! )</p>
+    <p>2. Enter the test, by clicking on the button "Enter Test" at bottom left corner of your Profile Page</p>
+    <p>3. Choose the field, you want to give test in</p>
+    <p>4. Familiarize youself with the test pattern and terms and conditions, by reading the basic info</p>
+    <p>5. After clicking on "Start Test", the 25 min test, will start</p>
+    <p class = "text-bold">Best of Luck !</p>
+    </div>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body" data-toggle="collapse" data-target="#demo5">
+    <p class = "text-bold">Q-5</p><p>I was not able to finish the test?</p>
+    <div id="demo5" class="collapse dark-grey">
+    <p>To finish the test manually (before 25 mins), you should have attempted, at least 15 questions.</p>
+    </div>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body" data-toggle="collapse" data-target="#demo6">
+    <p class = "text-bold">Q-6</p><p>I did not get any score on completion of the test. Did I not score well?</p>
+    <div id="demo6" class="collapse dark-grey">
+    <p>The test scores are confedential to candidates. Only Wrig recruiters can view your scores.</p>
+    </div>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body" data-toggle="collapse" data-target="#demo7">
+    <p class = "text-bold">Q-7</p><p>I have given the test. When will Wrig contact me?</p>
+    <div id="demo7" class="collapse dark-grey">
+    <p>Since we are always looking out for talent, Wrig will contact you via your contact information if you are deemed fit for a position at Wrig.</p>
+    </div>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body" data-toggle="collapse" data-target="#demo8">
+    <p class = "text-bold">Q-8</p><p>Can I give the test multiple times?</p>
+    <div id="demo8" class="collapse dark-grey">
+    <p>Yes, you can give the test any no. of times.</p>
+    </div>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body" data-toggle="collapse" data-target="#demo9">
+    <p class = "text-bold">Q-9</p><p>I faced a error page while giving the test and I could not get out of the error page, what should I do?</p>
+    <div id="demo9" class="collapse dark-grey">
+    <p>If during the test there was a error page, then try going <%= link_to "Here", reset_path %> . If the problem still persists, then try contacting us through our <%= link_to "Contact", contact_path %> page</p>
+    </div>
+  </div>
+</div>
+</div>
