@@ -20,7 +20,7 @@ index do
   column "Question", :ques_id
   column :updated
   column "Difficulty", :ques_id do |id|
-    if Que.find(id)
+    if Que.find_by(id: id)
       Que.find(id).diff
     else
       "Question Deleted"
