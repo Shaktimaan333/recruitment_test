@@ -36,13 +36,15 @@
         </ul>
       </nav>
       <% elsif user_giving_test %>
-      <% if Attempt.where(user_id: current_user.id).last.count>=15 %>
-      <nav class="collapse navbar-collapse" role="navigation">
-        <ul class = "nav navbar-nav navbar-right">
-          <li><%= link_to "Finish", users_finish_path %></li>
-        </ul>
-      </nav>
-      <% end %>
+      <% if Attempt.where(user_id: current_user.id).last != nil %>
+        <% if Attempt.where(user_id: current_user.id).last.count>=15 %>
+        <nav class="collapse navbar-collapse" role="navigation">
+          <ul class = "nav navbar-nav navbar-right">
+            <li><%= link_to "Finish", users_finish_path %></li>
+          </ul>
+        </nav>
+        <% end %>
+        <% end %>
       <% end %>
     </div>
   </nav>
