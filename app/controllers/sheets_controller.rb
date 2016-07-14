@@ -6,11 +6,10 @@ class SheetsController < ApplicationController
   end
   def update
     @attempt = Attempt.find(current_user.attempt_id)
-    @score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
-    sheet = Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: @score.ques_id)
+    @score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id, profile_id: current_user.profile_id)
+    Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: @score.ques_id, profile_id: current_user.profile_id).destroy
     @sheet = Sheet.new(sheet_params)
-    @sheet.update_attributes(attempt_id: current_user.attempt_id, ques_id: @score.ques_id, updated: 1)
-    sheet.destroy
+    @sheet.update_attributes(attempt_id: current_user.attempt_id, ques_id: @score.ques_id, updated: 1, profile_id: current_user.profile_id)
     @ques = Que.find_by(id: @score.ques_id)
     a=0
     if current_user.count==1 && !is_mobile_device?
@@ -100,7 +99,7 @@ class SheetsController < ApplicationController
         end
       end
       @attempt.update_attributes(ability: b + (correct_count - s)/t)
-      redirect_to users_finish_path
+      redirect_to ques_gofinish_path
     else
       redirect_to que_path(current_user.count + 1)
     end
@@ -129,9 +128,13 @@ class SheetsController < ApplicationController
     end
   end
   def cant_go_back
-    if current_user.under_test==0
-      redirect_to user_path(current_user)
-      flash.now[:danger] = "Sorry you cannot go like that"
+    if session[:waiting] == 1
+      redirect_to users_finish_path
+    else
+      if current_user.under_test==0
+        redirect_to user_path(current_user)
+        flash.now[:danger] = "Sorry you cannot go like that"
+      end
     end
   end
 end

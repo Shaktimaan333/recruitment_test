@@ -1,4 +1,5 @@
 <footer class = "footer">
+  <% if !user_giving_test %>
 <small>This site contains recruitment test for <a href = "http://www.truehb.com">Wrig Nanosystems</a></small>
 <nav>
 <ul>
@@ -7,4 +8,5 @@
 <li><%= link_to "FAQ", faq_path %></li>
 </ul>
 </nav>
+<% end %>
 </footer>

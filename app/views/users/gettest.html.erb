@@ -1,6 +1,6 @@
 <%= provide(:title, "Choose Test Field") %>
-<p>Please Choose The Exam you want to attempt</p>
-<% @exams.each do |exam| %>
-<%= link_to "#{exam.topic} ->", ques_path(exam: exam.id), class: "btn btn-primary btn-small" %>
+<p>Please Choose The Profile you want to apply for -</p>
+<% @profiles.each do |profile| %>
+<%= link_to "#{profile.name} ->", ques_path(profile: profile.id), class: "btn btn-primary btn-small" %>
 <h2>  </h2>
 <% end %>

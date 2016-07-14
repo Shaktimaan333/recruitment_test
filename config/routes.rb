@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'profiles/new'
+
   get 'password_resets/new'
 
   get 'password_resets/edit'
@@ -46,6 +48,9 @@ Rails.application.routes.draw do
   get 'reset' => 'users#reset'
   get 'users/ready'
   get 'ques/ready'
+  get 'ques/nextpart'
+  get 'ques/gofinish'
+  get 'ques/nextset'
   resources :users
   resources :ques
   resources :sheets

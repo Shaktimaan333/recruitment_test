@@ -21,9 +21,27 @@ class QuesController < ApplicationController
     #    current_user.update_attributes(redi: 0)
      # end
   #  end
-    @ti = Exam.find(current_user.exam_id).topic
     if current_user.count==0
-      current_user.update_attributes(count: 1, under_test: 1, freq: current_user.freq + 1)
+      current_user.update_attributes(count: 1, under_test: 1)
+      profile = Profile.find(current_user.profile_id)
+      session[:exam_counter] = profile.exams.size
+      c = 0
+      Attempt.all.each do |attempt|
+        if attempt.user_id==current_user.id && attempt.profile_id == profile.id
+          c = c + 1
+        end
+      end
+      biggest = -1
+      as = Hash[profile.exams.map.with_index.to_a]
+      Attempt.all.each do |attempt|
+        if attempt.user_id==current_user.id && attempt.profile_id == profile.id && attempt.freq == current_user.freq
+          if biggest < as[attempt.exam_id.to_s]
+            biggest = as[attempt.exam_id.to_s]
+          end
+        end
+      end
+      att = Attempt.create(user_id: current_user.id, profile_id: current_user.profile_id, freq: current_user.freq, start_time: Time.zone.now, exam_id: profile.exams[biggest + 1].to_i)
+      current_user.update_attributes(exam_id: profile.exams[biggest + 1].to_i, attempt_id: att.id)
       exam = Exam.find(current_user.exam_id)
       i=0
       a = Array.new
@@ -37,14 +55,16 @@ class QuesController < ApplicationController
       end
       session[:zack] = i - 1
       no = rand(0..(a.size-1))
-      score = Score.create(user_id: current_user.id, mark: 0, attempt: current_user.freq, exam_id: current_user.exam_id, last: -1, category_id: exam.categorys.first.id)
+      score = Score.create(user_id: current_user.id, mark: 0, attempt: current_user.freq, exam_id: current_user.exam_id, last: -1, category_id: exam.categorys.first.id, profile_id: current_user.profile_id)
     else
-      score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
+      score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id, profile_id: current_user.profile_id)
       if current_user.redi==0
         current_user.update_attributes(count: current_user.count + 1)
       end
     end
+    @ti = Exam.find(current_user.exam_id).topic
     @at = is_mobile_device?
+    @current_profile = Profile.find(current_user.profile_id)
 
 =begin
     if current_user.count==0
@@ -92,7 +112,7 @@ class QuesController < ApplicationController
       if current_user.redi==-1 || current_user.redi==2
         @present_ques = Que.find(score.ques_id)
         @sheet = Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
-        @sheet ||= Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
+        @sheet ||= Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0, profile_id: current_user.profile_id)
         score.update_attributes(ques_id: @present_ques.id)
         @attempt = Attempt.find(current_user.attempt_id)
         @ability = @attempt.ability
@@ -104,6 +124,7 @@ class QuesController < ApplicationController
       else
         i=1
         c=0
+=begin
         if Attempt.last
           d = Attempt.last.id
         end
@@ -117,6 +138,7 @@ class QuesController < ApplicationController
           i=i+1
         end
         current_user.update_attributes(attempt_id: Attempt.create(user_id: current_user.id, exam_id: current_user.exam_id, freq: c + 1, start_time: Time.zone.now).id)
+=end
         @attempt = Attempt.find(current_user.attempt_id)
         @attempt.update_attributes(ability: 3)
         a = Array.new
@@ -139,15 +161,15 @@ class QuesController < ApplicationController
         @present_ques = que
         hash = Hash[session[:cat].map.with_index.to_a]
         session[:no][hash[@present_ques.category_id]] += 1
-        @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
+        @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0, profile_id: current_user.profile_id)
         score.update_attributes(ques_id: @present_ques.id)
         @score = score
       end
     else
       if current_user.redi==-1 || current_user.redi==2
         @present_ques = Que.find(score.ques_id)
-        @sheet = Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 0)
-        @sheet ||=Sheet.create(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 0)
+        @sheet = Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 0, profile_id: current_user.profile_id)
+        @sheet ||=Sheet.create(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 0, profile_id: current_user.profile_id)
         score.update_attributes(ques_id: @present_ques.id)
         @attempt = Attempt.find(current_user.attempt_id)
         @ability = @attempt.ability
@@ -157,22 +179,22 @@ class QuesController < ApplicationController
         end
       else
         @attempt = Attempt.find(current_user.attempt_id)
-        if Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 1).correct? && @attempt.ques_correct != nil
+        if Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 1, profile_id: current_user.profile_id).correct? && @attempt.ques_correct != nil
           @attempt.update_attributes(ability: session[:if_correct_ability])
           @present_ques = Que.find(@attempt.ques_correct)
           hash = Hash[session[:cat].map.with_index.to_a]
           session[:no][hash[@present_ques.category_id]] += 1
           @ability = @attempt.ability
-          @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
+          @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0, profile_id: current_user.profile_id)
           score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
           @score = score
-        elsif !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 1).correct? && @attempt.ques_incorrect != nil
+        elsif !Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 1, profile_id: current_user.profile_id).correct? && @attempt.ques_incorrect != nil
           @attempt.update_attributes(ability: session[:if_incorrect_ability])
           @present_ques = Que.find(@attempt.ques_incorrect)
           hash = Hash[session[:cat].map.with_index.to_a]
           session[:no][hash[@present_ques.category_id]] += 1
           @ability = @attempt.ability
-          @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
+          @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0, profile_id: current_user.profile_id)
           score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
           @score = score
         else
@@ -190,7 +212,13 @@ class QuesController < ApplicationController
             end
           end
           @attempt = Attempt.find(current_user.attempt_id)
-          @attempt.update_attributes(ability: b + (correct_count - s)/t)
+          if b + (correct_count - s)/t > 10
+            @attempt.update_attribute(ability: 10)
+          elsif b + (correct_count - s)/t < -10
+            @attempt.update_attributes(ability: -10)
+          else
+            @attempt.update_attributes(ability: b + (correct_count - s)/t)
+          end
 =begin
         if @attempt.ability >= -0.5 && @attempt.ability<5.5
           rounded_part = @attempt.ability.round
@@ -331,7 +359,7 @@ class QuesController < ApplicationController
           hash = Hash[session[:cat].map.with_index.to_a]
           session[:no][hash[@present_ques.category_id]] += 1
           @ability = @attempt.ability
-          @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0)
+          @sheet = Sheet.create(attempt_id: current_user.attempt_id, ques_id: @present_ques.id, updated: 0, profile_id: current_user.profile_id)
           score.update_attributes(ques_id: @present_ques.id, category_id: @present_ques.category_id)
           @score = score
         end
@@ -657,12 +685,13 @@ class QuesController < ApplicationController
     @attempt.update_attributes(ques_correct: nil, ques_incorrect: nil)
   end
   def index
-    if Misc.find_by(user_id: current_user.id, attempt: current_user.freq + 1) && current_user.exam_id!=nil && current_user.exam_id!=0
-      @exam = Exam.find(current_user.exam_id)
+    if Misc.find_by(user_id: current_user.id, attempt: current_user.freq + 1) && current_user.profile_id!=nil && current_user.profile_id!=0
+      @profile = Profile.find(current_user.profile_id)
       @misc = Misc.find_by(user_id: current_user.id, attempt: current_user.freq + 1)
     else
-      @exam = Exam.find(params[:exam])
-      current_user.update_attributes(exam_id: params[:exam])
+      current_user.update_attributes(freq: current_user.freq + 1 )
+      @profile = Profile.find(params[:profile])
+      current_user.update_attributes(profile_id: params[:profile])
       @misc = Misc.create(user_id: current_user.id, attempt: current_user.freq + 1, terms: false)
     end
   end
@@ -685,8 +714,21 @@ class QuesController < ApplicationController
         correct_count += 1
       end
     end
-    if_correct_ability = b + (correct_count + 1 - s)/t
-    if_incorrect_ability = b + (correct_count - s)/t
+    if b + (correct_count + 1 - s)/t > 10
+      if_correct_ability = 10
+    elsif b + (correct_count + 1 - s)/t < -10
+      if_correct_ability = -10
+    else
+      if_correct_ability = b + (correct_count + 1 - s)/t
+    end
+
+    if b + (correct_count - s)/t > 10
+      if_incorrect_ability = 10
+    elsif b + (correct_count - s)/t < -10
+      if_incorrect_ability = -10
+    else
+      if_incorrect_ability = b + (correct_count - s)/t
+    end
     session[:if_correct_ability] = if_correct_ability
     session[:if_incorrect_ability] = if_incorrect_ability
     min = Float::INFINITY
@@ -815,41 +857,59 @@ class QuesController < ApplicationController
     no = rand(0..(arc.size-1))
     attempt.update_attributes(ques_incorrect: arc[no])
   end
+
   helper_method :ready
+
+  def nextpart
+    session[:waiting] = 0
+    redirect_to que_path(1)
+  end
+  def gofinish
+  end
+  def nextset
+  end
   private
   def stay
-    if current_user.count>0
-      score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
-      if params[:id].to_i==current_user.count && Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 0) && current_user.redi!=2 && current_user.redi!=-1
-        current_user.update_attributes(redi: 2)
-        redirect_to que_path(current_user.count)
-      else
-        if current_user.redi==1
-          current_user.update_attributes(redi: -1)
+    if session[:waiting] == 1
+      redirect_to users_finish_path
+    else
+      if current_user.count>0
+        score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id, profile_id: current_user.profile_id)
+        if params[:id].to_i==current_user.count && Sheet.find_by(attempt_id: current_user.attempt_id, ques_id: score.ques_id, updated: 0, profile_id: current_user.profile_id) && current_user.redi!=2 && current_user.redi!=-1
+          current_user.update_attributes(redi: 2)
+          redirect_to que_path(current_user.count)
         else
-          if (params[:id].to_i - 1)!=current_user.count && current_user.redi!=2 && current_user.redi!=-1
-            current_user.update_attributes(redi: 1)
-            redirect_to que_path(current_user.count)
+          if current_user.redi==1
+            current_user.update_attributes(redi: -1)
+          else
+            if (params[:id].to_i - 1)!=current_user.count && current_user.redi!=2 && current_user.redi!=-1
+              current_user.update_attributes(redi: 1)
+              redirect_to que_path(current_user.count)
+            end
           end
         end
       end
     end
   end
   def not_allowed
-    if current_user.under_test!=1 || current_user.exam_id==nil
+    if current_user.under_test!=1 || current_user.profile_id==nil
       flash[:danger] = "Sorry, you can't enter the test like that !"
       redirect_to root_path
     end
   end
   def test_started
-    if current_user.under_test!=1
-      flash[:danger] = "Sorry you cannot enter the test like this"
-      redirect_to root_path
-    elsif (current_user.exam_id==nil || current_user.exam_id==0) && params[:exam]==nil
-      redirect_to gettest_path
-    elsif current_user.count>0
-      current_user.update_attributes(redi: 2)
-      redirect_to que_path(current_user.count)
+    if session[:waiting] == 1
+      redirect_to users_finish_path
+    else
+      if current_user.under_test!=1
+        flash[:danger] = "Sorry you cannot enter the test like this"
+        redirect_to root_path
+      elsif (current_user.profile_id==nil || current_user.profile_id==0) && params[:profile]==nil
+        redirect_to gettest_path
+      elsif current_user.count>0
+        current_user.update_attributes(redi: 2)
+        redirect_to que_path(current_user.count)
+      end
     end
   end
   def cant_go_back

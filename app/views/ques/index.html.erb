@@ -1,7 +1,8 @@
 <%= provide(:title, "Basic Info") %>
 <h1>Basic Info</h1>
+<h4 class = 'text-center'>You have chosen to apply for <kbd><%= @profile.name %></kbd></h4>
 <div class = "container-fluid bg-grey">
-<h4>You have chosen <kbd><%= @exam.topic %></kbd> as your Topic for the test</h4>
+<h5>The test will start with <kbd><%= Exam.find(@profile.exams[0].to_i).topic %></kbd></h5>
 <p>The test contains questions solely related to the topic. The questions are multiple choice with only one correct option. The Time given for the test is 25 minutes.
 You can attempt a maximum of 40 questions. You have to attempt at least 15 questions before you can manually finish the test.</p>
 </div>
@@ -9,9 +10,7 @@ You can attempt a maximum of 40 questions. You have to attempt at least 15 quest
 <p>Please read the instructions given below -</p>
 <button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#demo">Dropdown Terms and Conditions</button>
   <div id="demo" class="collapse">
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    If you are found guilty of leaking the question database or cause harm to Talent Acquisiton Portal, subsidiary of Wrig Nanosystems, then legal action could be taken against you. 
   </div>
 
 <h5>  </h5>

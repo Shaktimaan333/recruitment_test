@@ -1,5 +1,66 @@
 <%= provide(:title, "Test Finished") %>
+<% if current_user.under_test == 1 %>
+<body onload="setTimeout('delayedRedirect()', 20000)">
 <h1>Congratulations</h1>
+<p class = "text-center">Please do not do anything, you will be redirected to next test within few minutes.</p>
+<div class="panel panel-default">
+  <div class="panel-body">No. of questions attempted : <%= @attempt.count %></div>
+</div>
+<p>The next set will start in -</p>
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <div class="panel panel-default" data-toggle="tooltip" data-placement="top">
+      <div class="panel-body">
+        <div class="lead" id="clock"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class = "container-fluid bg-grey">
+  <p>Thank you for attempting the test. In case of future need of contact we will contact you via email.</p>
+</div>
+<h2>  </h2>
+
+</body>
+<script type="text/javascript">
+  $(document).ready(function() {
+      now = new Date().getTime();
+      var futureDate = new Date((now + parseInt("1") * 60000));
+      var savedTime = localStorage.getItem('currentTimerValue');
+      var pathname = window.location.pathname;
+      if (savedTime != null) {
+        var timeArray = savedTime.split(":");
+        var min = timeArray[0];
+        var sec = timeArray[1];
+        now = new Date().getTime();
+        futureDate = new Date((now + parseInt(min) * 60000 + parseInt(sec) * 1000));
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      var $clock = $('#clock');
+      $clock.countdown(futureDate, function(event) {
+        $(this).html(event.strftime('%M:%S'));
+      }).on('finish.countdown', function(event) {
+          localStorage.removeItem('currentTimerValue');
+          window.location.href = "/ques/nextset";
+      });
+
+      Offline.on('down', function () {
+            $clock.countdown('pause');
+        });
+
+      Offline.on('up', function () {
+            $clock.countdown('resume');
+        });
+
+      setInterval(function() {
+        localStorage.setItem('currentTimerValue', $clock.html());
+      }, 500);
+  });
+
+</script>
+<% else %>
+<h1>Congratulations</h1>
+<h5 class = 'text-center'>You have completed the test</h5>
 <div class="panel panel-default">
   <div class="panel-body">No. of questions attempted : <%= @attempt.count %></div>
 </div>
@@ -10,9 +71,4 @@
 <%= link_to "Home", root_path, class: "btn btn-primary btn-small" %>
 <%= link_to "Profile page", user_path(@user), class: "btn btn-primary btn-small" %>
 
-<script type="text/javascript">
-  $(document).ready(function() {
-      localStorage.removeItem('currentTimerValue');
-  });
-
-</script>
+<% end %>

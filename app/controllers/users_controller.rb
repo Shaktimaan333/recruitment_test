@@ -34,7 +34,7 @@ class UsersController < ApplicationController
   def edit
   end
   def gettest
-    @exams = Exam.all
+    @profiles = Profile.all
     current_user.update_attributes(under_test: 1)
   end
   def update
@@ -52,24 +52,56 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   def finish
-    if current_user.count>0
-      @exam = Exam.find(current_user.exam_id)
-      @score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
-      @attempt = Attempt.find(current_user.attempt_id)
-      @ability = @attempt.ability
-      @attempts = Attempt.where(exam_id: @exam.id)
-      c = @attempts.count
-      s=0
-      @attempts.each do |attempt|
-        s = s + attempt.ability
+    profile = Profile.find(current_user.profile_id)
+    as = Hash[profile.exams.map.with_index.to_a]
+    if session[:waiting]!=1
+      if current_user.count>0
+        if as[Exam.find(current_user.exam_id).id.to_s]==session[:exam_counter] - 1
+          session[:waiting] = 0
+          @exam = Exam.find(current_user.exam_id)
+          @score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id)
+          @attempt = Attempt.find(current_user.attempt_id)
+          @ability = @attempt.ability
+          @attempts = Attempt.where(exam_id: @exam.id)
+          c = @attempts.count
+          s=0
+          @attempts.each do |attempt|
+            if attempt.ability != nil
+              s = s + attempt.ability
+            end
+          end
+          @exam.update_attributes(average: s/c)
+          Misc.where(user_id: current_user.id).each do |mi|
+            mi.destroy
+          end
+          current_user.update_attributes(exam_id: 0, under_test: 0, count: 0, redi: 0, attempt_id: 0)
+          @user = current_user
+        else
+          session[:waiting] = 1
+          @exam = Exam.find(current_user.exam_id)
+          @score = Score.find_by(user_id: current_user.id, attempt: current_user.freq, exam_id: current_user.exam_id, profile_id: current_user.profile_id)
+          @attempt = Attempt.find(current_user.attempt_id)
+          @ability = @attempt.ability
+          @attempts = Attempt.where(exam_id: @exam.id)
+          c = @attempts.count
+          s=0
+          @attempts.each do |attempt|
+            if attempt.ability != nil
+              s = s + attempt.ability
+            end
+          end
+          @exam.update_attributes(average: s/c)
+          current_user.update_attributes(exam_id: 0, count: 0, redi: 0, attempt_id: 0)
+          @user = current_user
+        end
+      else
+        session[:waiting] = 0
+        current_user.update_attributes(exam_id: 0, under_test: 0, count: 0, redi: 0, attempt_id: 0)
+        flash[:danger] = "You have left the test"
+        redirect_to root_path
       end
-      @exam.update_attributes(average: s/c)
-      current_user.update_attributes(exam_id: 0, under_test: 0, count: 0, redi: 0, attempt_id: 0)
-      @user = current_user
     else
-      current_user.update_attributes(exam_id: 0, under_test: 0, count: 0, redi: 0, attempt_id: 0)
-      flash[:danger] = "You have left the test"
-      redirect_to root_path
+      @attempt = Attempt.where(user_id: current_user.id, profile_id: current_user.profile_id, freq: current_user.freq).last
     end
   end
   def refresh_diff
@@ -119,6 +151,7 @@ class UsersController < ApplicationController
     redirect_to user_path(current_user)
   end
   def reset
+    session[:waiting] = 0
     current_user.update_attributes(under_test: 0, exam_id: 0, redi: 0, count: 0)
     Misc.where(user_id: current_user.id).each do |mi|
       mi.destroy
@@ -143,16 +176,20 @@ class UsersController < ApplicationController
     redirect_to(root_url) unless current_user.admin?
   end
   def stay
-    if current_user!=nil
-      if current_user.under_test==1
-        if current_user.exam_id>0
-          if current_user.count>0
-            redirect_to que_path(current_user.count)
+    if session[:waiting] == 1
+      redirect_to users_finish_path
+    else
+      if current_user!=nil
+        if current_user.under_test==1
+          if current_user.exam_id>0
+            if current_user.count>0
+              redirect_to que_path(current_user.count)
+            else
+              redirect_to ques_path
+            end
           else
-            redirect_to ques_path
+            redirect_to gettest_path
           end
-        else
-          redirect_to gettest_path
         end
       end
     end
@@ -165,10 +202,10 @@ class UsersController < ApplicationController
       if current_user.under_test!=1 && current_user.count<=0
         flash[:danger] = "Sorry, you can't enter the test like that !"
         redirect_to root_path
-  #    elsif current_user.exam_id==nil || current_user.exam_id==0
-   #     redirect_to gettest_path
-    #  elsif current_user.count==0
-     #   redirect_to ques_path
+    #   elsif current_user.exam_id==nil || current_user.exam_id==0
+     #    redirect_to gettest_path
+      #  elsif current_user.count==0
+       #   redirect_to ques_path
       elsif current_user.under_test==1 && current_user.count>0 && current_user.count<15 && params[:id]!=current_user.activation_digest && current_user.redi!=5
         flash[:warning] = "You have to attempt 15 questions before you can manually finish the test"
         current_user.update_attributes(redi: 2)
@@ -177,12 +214,16 @@ class UsersController < ApplicationController
     end
   end
   def cant_start_again
-    if current_user.under_test==1 && (current_user.exam_id!=nil && current_user.exam_id!=0)
-      if current_user.count==0
-        redirect_to ques_path
-      else
-        current_user.update_attributes(redi: 2)
-        redirect_to que_path(current_user.count)
+    if session[:waiting] == 1
+      redirect_to users_finish_path
+    else
+      if current_user.under_test==1 && (current_user.exam_id!=nil && current_user.exam_id!=0)
+        if current_user.count==0
+          redirect_to ques_path
+        else
+          current_user.update_attributes(redi: 2)
+          redirect_to que_path(current_user.count)
+        end
       end
     end
   end
