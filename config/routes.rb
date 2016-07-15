@@ -51,11 +51,13 @@ Rails.application.routes.draw do
   get 'ques/nextpart'
   get 'ques/gofinish'
   get 'ques/nextset'
+  get 'createprofile' => 'profiles#new'
   resources :users
   resources :ques
   resources :sheets
   resources :miscs
   resources :problems
+  resources :profiles
   resources :account_activations, only: [:edit]
   resources :password_resets, only: [:new, :create, :edit, :update]
   # The priority is based upon order of creation: first created -> highest priority.

@@ -1,0 +1,17 @@
+<% provide(:title, "#{@profile.name}") %>
+<div class= "container-fluid bg-grey">
+<div class = "row">
+  <div class = "col-sm-6">
+    <p class="text-bold">Name:</p>
+    <p><%= @profile.name %></p>
+  </div>
+  <div class = "col-sm-6">
+    <p class="text-bold">Exams:</p>
+      <% @profile.exams.each do |e| %>
+        <p><%= Exam.find(e.to_i).topic %></p>
+      <% end %>
+  </div>
+</div>
+</div>
+<h2>  </h2>
+<%= link_to "All profiles", profiles_path, class: "btn btn-md btn-primary" %>

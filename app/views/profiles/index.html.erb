@@ -1,0 +1,33 @@
+<% provide(:title, "All Profiles") %>
+<h1>All Profiles</h1>
+<div class = "container-fluid bg-grey">
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Exams</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @profiles.each do |profile| %>
+  <tr>
+    <td><%= profile.name %></td>
+    <td>
+      <ul>
+        <% profile.exams.each do |e| %>
+          <li><%= Exam.find(e.to_i).topic %></li>
+        <% end %>
+      </ul>
+    </td>
+    <td>
+      <%= link_to "View", profile %> |
+      <%= link_to "Delete", profile, method: :delete, data: { confirm: "You sure?" } %>
+    </td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+</div>
+<h2>   </h2>
+<%= link_to "Create Profile", createprofile_path, class: "btn btn-md btn-primary" %>
