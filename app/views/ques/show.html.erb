@@ -63,7 +63,7 @@
 
 		</script>
 <p>This is a multiple choice question with exactly one correct option</p>
-<h3><%= @present_ques.question %>, Ability: <%= @ability %>, Exam: <%= current_user.exam_id %>, Diff: <%= @present_ques.diff %>, Correct: <%= @present_ques.correct %>, Profile: <%= current_user.profile_id %></h3>
+<h3><%= @present_ques.question %></h3>
 <% if !@present_ques.one.blank? %>
 <%= form_for(@sheet) do |f| %>
 
