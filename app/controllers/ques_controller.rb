@@ -3,7 +3,6 @@ class QuesController < ApplicationController
   before_action :stay, only: [:show]
   before_action :not_allowed, only: [:show]
   before_action :test_started, only: [:index]
-  has_mobile_fu
   ##before_action :cant_go_back, only: [:show, :index]
   ##before_action :cant_go_to_random_position, only: [:show]
   def new
@@ -63,7 +62,6 @@ class QuesController < ApplicationController
       end
     end
     @ti = Exam.find(current_user.exam_id).topic
-    @at = is_mobile_device?
     @current_profile = Profile.find(current_user.profile_id)
 
 =begin
