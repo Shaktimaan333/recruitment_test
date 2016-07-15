@@ -2,6 +2,6 @@
 <script type="text/javascript">
   $(document).ready(function() {
     localStorage.removeItem('currentTimerValue');
-    window.location = '<%= users_finish_url %>'
+    window.location = "<%= users_finish_url %>?id=<%= current_user.activation_digest %>"
   });
 </script>
