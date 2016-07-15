@@ -15,3 +15,4 @@
 //= require bootstrap-sprockets
 //= require jquery.countdown
 //= require_tree
+//= require headshot_support
