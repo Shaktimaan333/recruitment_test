@@ -58,7 +58,7 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  #config.action_controller.asset_host = "dnjmxa9qvr7tm.cloudfront.net" 
+  #config.action_controller.asset_host = "dnjmxa9qvr7tm.cloudfront.net"
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -74,7 +74,7 @@ Rails.application.configure do
   port:                 587,
   domain:               'wrig.in',
   user_name:            'wrig.medical.equipments',
-  password:             'welcome2017',
+  password:             'Welcome@2017',
   authentication:       'plain',
   enable_starttls_auto: true  }
 
